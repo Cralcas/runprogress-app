@@ -1,6 +1,6 @@
 import { Session, User } from "@supabase/supabase-js";
 import { ReactNode, useState, useEffect } from "react";
-import { supabase } from "../database/supabase-clients";
+import { supabase } from "../database/supabase-client";
 import { AuthContext } from "./AuthContext";
 
 type AuthProviderProps = {
@@ -8,8 +8,8 @@ type AuthProviderProps = {
 };
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState<User | null>();
-  const [session, setSession] = useState<Session | null>();
+  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -25,14 +25,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       }
 
       setSession(session);
-      setUser(session?.user);
+      setUser(session?.user || null);
       setLoading(false);
     };
 
+    // Listen for auth state changes
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setSession(session);
-        setUser(session?.user);
+        setUser(session?.user || null);
         setLoading(false);
       }
     );
@@ -40,9 +41,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setData();
 
     return () => {
-      if (listener?.subscription) {
-        listener.subscription.unsubscribe();
-      }
+      listener?.subscription.unsubscribe();
     };
   }, []);
 
