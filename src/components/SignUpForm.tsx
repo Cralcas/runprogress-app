@@ -1,5 +1,6 @@
 import { FormEvent, useState } from "react";
 import { supabase } from "../database/supabase-client";
+import { checkExistingUser } from "../services/userService";
 
 export const SignUpForm = () => {
   const [email, setEmail] = useState("");
@@ -16,17 +17,7 @@ export const SignUpForm = () => {
     setSuccessMessage("");
 
     try {
-      const { data: existingUser, error: usernameError } = await supabase
-        .from("profiles")
-        .select("id")
-        .eq("username", username)
-        .single();
-
-      if (usernameError && usernameError.code !== "PGRST116") {
-        setError("Error checking username availability.");
-        setLoading(false);
-        return;
-      }
+      const existingUser = await checkExistingUser(username);
 
       if (existingUser) {
         setError("Username already taken. Please choose another.");
@@ -41,6 +32,7 @@ export const SignUpForm = () => {
           data: {
             username,
           },
+          emailRedirectTo: "http://localhost:5173/login",
         },
       });
 
@@ -51,7 +43,7 @@ export const SignUpForm = () => {
       }
 
       if (data.user) {
-        setSuccessMessage("Account Created");
+        setSuccessMessage("Account created, confirm account via Email.");
       }
     } catch (error) {
       console.error("Unexpected error:", error);
