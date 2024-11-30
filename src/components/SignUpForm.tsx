@@ -1,9 +1,5 @@
 import { FormEvent, useState } from "react";
-import { supabase } from "../database/supabase-client";
-import {
-  checkExistingEmail,
-  checkExistingUsername,
-} from "../services/userService";
+import { signUpUser } from "../services/userService";
 
 export const SignUpForm = () => {
   const [email, setEmail] = useState("");
@@ -19,43 +15,21 @@ export const SignUpForm = () => {
     setError("");
     setSuccessMessage("");
 
-    const existingUsername = await checkExistingUsername(username);
-    if (existingUsername) {
-      setError("Username already taken. Please choose another.");
+    try {
+      const data = await signUpUser(email, password, username);
+
+      if (data?.user) {
+        setSuccessMessage("Account created, confirm account via Email.");
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unknown error occurred. Please try again.");
+      }
+    } finally {
       setLoading(false);
-      return;
     }
-
-    const existingEmail = await checkExistingEmail(email);
-    if (existingEmail) {
-      setError("Email already in use. Please use another email.");
-      setLoading(false);
-      return;
-    }
-
-    const { data, error: signUpError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          username,
-          email,
-        },
-        emailRedirectTo: "http://localhost:5173/login",
-      },
-    });
-
-    if (signUpError) {
-      setError(`Error: ${signUpError.message}`);
-      setLoading(false);
-      return;
-    }
-
-    if (data?.user) {
-      setSuccessMessage("Account created, confirm account via Email.");
-    }
-
-    setLoading(false);
   };
 
   return (
@@ -88,15 +62,12 @@ export const SignUpForm = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+          placeholder="min 6 characters"
         />
       </div>
 
-      {error && <div style={{ color: "red" }}>{error}</div>}
-      {successMessage && (
-        <div>
-          <span>{successMessage}</span>
-        </div>
-      )}
+      {error && <div>{error}</div>}
+      {successMessage && <div>{successMessage}</div>}
 
       <button disabled={loading}>
         {loading ? "Signing up..." : "Sign Up"}
