@@ -1,6 +1,9 @@
 import { FormEvent, useState } from "react";
 import { supabase } from "../database/supabase-client";
-import { checkExistingUser } from "../services/userService";
+import {
+  checkExistingEmail,
+  checkExistingUsername,
+} from "../services/userService";
 
 export const SignUpForm = () => {
   const [email, setEmail] = useState("");
@@ -16,41 +19,43 @@ export const SignUpForm = () => {
     setError("");
     setSuccessMessage("");
 
-    try {
-      const existingUser = await checkExistingUser(username);
-
-      if (existingUser) {
-        setError("Username already taken. Please choose another.");
-        setLoading(false);
-        return;
-      }
-
-      const { data, error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            username,
-          },
-          emailRedirectTo: "http://localhost:5173/login",
-        },
-      });
-
-      if (signUpError) {
-        setError(`Error: ${signUpError.message}`);
-        setLoading(false);
-        return;
-      }
-
-      if (data.user) {
-        setSuccessMessage("Account created, confirm account via Email.");
-      }
-    } catch (error) {
-      console.error("Unexpected error:", error);
-      setError("An unexpected error occurred.");
-    } finally {
+    const existingUsername = await checkExistingUsername(username);
+    if (existingUsername) {
+      setError("Username already taken. Please choose another.");
       setLoading(false);
+      return;
     }
+
+    const existingEmail = await checkExistingEmail(email);
+    if (existingEmail) {
+      setError("Email already in use. Please use another email.");
+      setLoading(false);
+      return;
+    }
+
+    const { data, error: signUpError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          username,
+          email,
+        },
+        emailRedirectTo: "http://localhost:5173/login",
+      },
+    });
+
+    if (signUpError) {
+      setError(`Error: ${signUpError.message}`);
+      setLoading(false);
+      return;
+    }
+
+    if (data?.user) {
+      setSuccessMessage("Account created, confirm account via Email.");
+    }
+
+    setLoading(false);
   };
 
   return (
