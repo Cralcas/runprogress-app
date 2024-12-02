@@ -15,16 +15,18 @@ export const Navbar = () => {
     <nav>
       <div>Logo</div>
       <ul>
-        {!session && !isAuthPage && (
-          <li>
-            <Link to="/signup">Signup</Link>
-          </li>
-        )}
-        {!session && location.pathname === "/signup" && (
+        {!session && isAuthPage && location.pathname === "/signup" && (
           <li>
             <Link to="/login">Login</Link>
           </li>
         )}
+
+        {!session && isAuthPage && location.pathname === "/login" && (
+          <li>
+            <Link to="/signup">Sign Up</Link>
+          </li>
+        )}
+
         {session && !isAuthPage && (
           <>
             <li>

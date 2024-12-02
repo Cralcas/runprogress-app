@@ -6,8 +6,12 @@
 }
 
 body {
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 1.5;
   background-color: $background-color;
   font-weight: bold;
+}
+
+h1 {
+  font-size: $large-text;
 }

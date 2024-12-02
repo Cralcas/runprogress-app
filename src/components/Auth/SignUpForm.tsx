@@ -1,5 +1,6 @@
 import { FormEvent, useState } from "react";
 import { signUpUser } from "../../services/userService";
+import styles from "./AuthForm.module.scss";
 
 export const SignUpForm = () => {
   const [email, setEmail] = useState("");
@@ -33,10 +34,11 @@ export const SignUpForm = () => {
   };
 
   return (
-    <form onSubmit={handleCreateUser}>
-      <div>
-        <label htmlFor="username">Username:</label>
+    <form className={styles.form} onSubmit={handleCreateUser}>
+      <div className={styles.input}>
+        <label htmlFor="username">Username</label>
         <input
+          className={styles.field}
           type="text"
           id="username"
           value={username}
@@ -44,9 +46,10 @@ export const SignUpForm = () => {
           required
         />
       </div>
-      <div>
-        <label htmlFor="email">Email:</label>
+      <div className={styles.input}>
+        <label htmlFor="email">Email</label>
         <input
+          className={styles.field}
           type="email"
           id="email"
           value={email}
@@ -54,9 +57,10 @@ export const SignUpForm = () => {
           required
         />
       </div>
-      <div>
-        <label htmlFor="password">Password:</label>
+      <div className={styles.input}>
+        <label htmlFor="password">Password</label>
         <input
+          className={styles.field}
           type="password"
           id="password"
           value={password}
@@ -69,9 +73,11 @@ export const SignUpForm = () => {
       {error && <div>{error}</div>}
       {successMessage && <div>{successMessage}</div>}
 
-      <button disabled={loading}>
-        {loading ? "Signing up..." : "Sign Up"}
-      </button>
+      <div className={styles.formButton}>
+        <button className={styles.largeButton} disabled={loading}>
+          {loading ? "Signing up..." : "Sign Up"}
+        </button>
+      </div>
     </form>
   );
 };
