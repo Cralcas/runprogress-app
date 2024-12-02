@@ -19,7 +19,7 @@ export const SignUpForm = () => {
       const data = await signUpUser(email, password, username);
 
       if (data?.user) {
-        setSuccessMessage("Account created, confirm account via Email.");
+        setSuccessMessage("Account created, confirm via email.");
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
