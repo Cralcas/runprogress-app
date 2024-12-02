@@ -1,6 +1,7 @@
 import { FormEvent, useState } from "react";
-import { supabase } from "../database/supabase-client";
+import { supabase } from "../../database/supabase-client";
 import { useNavigate } from "react-router-dom";
+import styles from "./AuthForm.module.scss";
 
 export const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -29,10 +30,11 @@ export const LoginForm = () => {
   };
 
   return (
-    <form onSubmit={handleLogin}>
-      <div>
-        <label htmlFor="email">Email:</label>
+    <form className={styles.form} onSubmit={handleLogin}>
+      <div className={styles.input}>
+        <label htmlFor="email">Email</label>
         <input
+          className={styles.field}
           type="email"
           id="email"
           value={email}
@@ -41,9 +43,10 @@ export const LoginForm = () => {
         />
       </div>
 
-      <div>
-        <label htmlFor="password">Password:</label>
+      <div className={styles.input}>
+        <label htmlFor="password">Password</label>
         <input
+          className={styles.field}
           type="password"
           id="password"
           value={password}
@@ -52,9 +55,11 @@ export const LoginForm = () => {
         />
       </div>
       {error && <p>{error}</p>}
-      <button type="submit" disabled={loading}>
-        {loading ? "Logging in..." : "Login"}
-      </button>
+      <div className={styles.formButton}>
+        <button className={styles.largeButton} type="submit" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
+      </div>
     </form>
   );
 };

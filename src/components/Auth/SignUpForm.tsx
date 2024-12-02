@@ -1,5 +1,5 @@
 import { FormEvent, useState } from "react";
-import { signUpUser } from "../services/userService";
+import { signUpUser } from "../../services/userService";
 
 export const SignUpForm = () => {
   const [email, setEmail] = useState("");

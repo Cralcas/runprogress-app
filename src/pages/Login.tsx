@@ -1,5 +1,5 @@
 import { Link, Navigate } from "react-router-dom";
-import { LoginForm } from "../components/LoginForm";
+import { LoginForm } from "../components/Auth/LoginForm";
 import { useAuth } from "../hooks/useAuth";
 
 export const Login = () => {
@@ -10,12 +10,17 @@ export const Login = () => {
   }
 
   return (
-    <>
-      <h1>Login</h1>
-      <LoginForm />
-      <Link to="/signup">
-        Don't have an account? <b>Sign up</b>
-      </Link>
-    </>
+    <div className="container">
+      <section className="form-section">
+        <h1>Login</h1>
+        <LoginForm />
+        <span>
+          Don't have an account?{" "}
+          <Link to="/signup">
+            <b>Sign up</b>
+          </Link>
+        </span>
+      </section>
+    </div>
   );
 };

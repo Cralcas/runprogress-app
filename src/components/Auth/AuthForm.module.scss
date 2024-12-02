@@ -1,0 +1,46 @@
+@use "../../sass//globals/variables" as *;
+
+.form {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 8px;
+}
+
+.field {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #ccc;
+  background: $secondary-color;
+  border-radius: 4px;
+}
+
+.input {
+  display: flex;
+  flex: 1;
+  flex-flow: column nowrap;
+  align-items: flex-start;
+  gap: 8px;
+  min-height: 24px;
+  position: relative;
+}
+
+.formButton {
+  padding: 16px 0;
+}
+
+.largeButton {
+  display: flex;
+  position: relative;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 0px;
+  cursor: pointer;
+  color: $background-color;
+  background: $primary-color;
+}
