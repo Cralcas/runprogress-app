@@ -27,7 +27,9 @@ export const Navbar = () => {
         )}
         {session && !isAuthPage && (
           <>
-            <li>Profile</li>
+            <li>
+              <Link to="/profile">Profile</Link>
+            </li>
             <li>
               <button onClick={handleLogout}>Logout</button>
             </li>
