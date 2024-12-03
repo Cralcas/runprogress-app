@@ -1,7 +1,9 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import styles from "./Navbar.module.scss";
 import { Button } from "../Button/Button";
+import { IoIosLogOut } from "react-icons/io";
+import { MdAccountCircle } from "react-icons/md";
 
 export const Navbar = () => {
   const { session, signOut } = useAuth();
@@ -15,11 +17,11 @@ export const Navbar = () => {
   };
 
   return (
-    <nav>
-      <Link to="/" className={styles.a} aria-label="Go to home page">
+    <nav className={styles.nav}>
+      <NavLink to="/" className={styles.a} aria-label="Go to home page">
         <img src="/images/mobile-logo.svg" alt="Runprogress logo" />
-      </Link>
-      <ul>
+      </NavLink>
+      <ul className={styles.ul}>
         {!session && isAuthPage && location.pathname === "/signup" && (
           <li>
             <Button
@@ -48,21 +50,24 @@ export const Navbar = () => {
           <>
             <li>
               <Button
-                size="default"
-                variant="primary"
+                variant="icon"
+                className={styles.iconButton}
                 onClick={() => navigate("/profile")}
+                aria-label="Go to Profile"
               >
-                Profile
+                <MdAccountCircle className={styles.profile} />
               </Button>
             </li>
             <li>
               <Button
-                size="default"
-                variant="primary"
-                aria-label="Log out of your account"
+                variant="icon"
+                className={styles.iconButton}
                 onClick={handleLogout}
+                aria-label="Log out"
+                size="icon"
+                type="button"
               >
-                Logout
+                <IoIosLogOut className={styles.logout} />
               </Button>
             </li>
           </>
