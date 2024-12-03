@@ -22,24 +22,3 @@
   gap: 0.5rem;
   min-height: 1.5rem;
 }
-
-.formButton {
-  padding: 1rem 0;
-}
-
-.largeButton {
-  display: flex;
-  position: relative;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0.3rem;
-  border: none;
-  outline: none;
-  font-size: 1rem;
-  font-weight: bold;
-  padding: 0.625rem 0;
-  cursor: pointer;
-  color: $background-color;
-  background: $primary-color;
-}

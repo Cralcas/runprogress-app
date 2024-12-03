@@ -2,6 +2,7 @@ import { FormEvent, useState } from "react";
 import { supabase } from "../../database/supabase-client";
 import { useNavigate } from "react-router-dom";
 import styles from "./AuthForm.module.scss";
+import { Button } from "../Button/Button";
 
 export const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -56,9 +57,9 @@ export const LoginForm = () => {
       </div>
       {error && <p>{error}</p>}
       <div className={styles.formButton}>
-        <button className={styles.largeButton} type="submit" disabled={loading}>
+        <Button type="submit" size="large" variant="primary" disabled={loading}>
           {loading ? "Logging in..." : "Login"}
-        </button>
+        </Button>
       </div>
     </form>
   );

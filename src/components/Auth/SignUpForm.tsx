@@ -1,6 +1,7 @@
 import { FormEvent, useState } from "react";
 import { signUpUser } from "../../services/userService";
 import styles from "./AuthForm.module.scss";
+import { Button } from "../Button/Button";
 
 export const SignUpForm = () => {
   const [email, setEmail] = useState("");
@@ -74,9 +75,9 @@ export const SignUpForm = () => {
       {successMessage && <div>{successMessage}</div>}
 
       <div className={styles.formButton}>
-        <button className={styles.largeButton} disabled={loading}>
+        <Button type="submit" size="large" variant="primary" disabled={loading}>
           {loading ? "Signing up..." : "Sign Up"}
-        </button>
+        </Button>
       </div>
     </form>
   );
