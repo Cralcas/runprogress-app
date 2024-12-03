@@ -18,8 +18,12 @@ export const Navbar = () => {
 
   return (
     <nav className={styles.nav}>
-      <NavLink to="/" className={styles.a} aria-label="Go to home page">
-        <img src="/images/mobile-logo.svg" alt="Runprogress logo" />
+      <NavLink to="/" className={styles.a} aria-label="Back to home page">
+        <img
+          className={styles.img}
+          src="/images/desktop-logo.svg"
+          alt="Runprogress logo"
+        />
       </NavLink>
       <ul className={styles.ul}>
         {!session && isAuthPage && location.pathname === "/signup" && (

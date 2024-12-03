@@ -1,4 +1,5 @@
 @use "../../sass/globals/variables" as *;
+@use "../../sass/globals/media-queries" as *;
 @use "sass:color";
 
 .nav {
@@ -6,17 +7,28 @@
   flex-wrap: nowrap;
   justify-content: space-between;
   align-items: center;
-
   padding: 1rem 1rem;
 
-  a {
-    display: inline-block;
+  @include for-desktop {
+    padding: 1rem 4rem;
+  }
+
+  .img {
+    width: 100px;
+
+    @include for-desktop {
+      width: 150px;
+    }
   }
 }
 
 .ul {
   display: flex;
-  gap: 1rem;
+  gap: 0.8rem;
+
+  @include for-desktop {
+    gap: 3rem;
+  }
 }
 
 .iconButton,

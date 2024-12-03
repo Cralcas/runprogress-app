@@ -39,9 +39,11 @@ footer {
   display: flex;
   flex-flow: column nowrap;
   margin: 0 auto;
+  padding-top: 2rem;
   border: none;
   max-width: 22.5rem;
   width: 100%;
+  gap: 0.625rem;
 
   span {
     color: $secondary-color;
