@@ -22,7 +22,7 @@ export const Navbar = () => {
         <img
           className={styles.img}
           src="/images/desktop-logo.svg"
-          alt="Runprogress logo"
+          alt="RunProgress logo"
         />
       </NavLink>
       <ul className={styles.ul}>
@@ -32,6 +32,7 @@ export const Navbar = () => {
               size="default"
               variant="primary"
               onClick={() => navigate("/login")}
+              aria-label="Login"
             >
               Login
             </Button>
@@ -43,6 +44,7 @@ export const Navbar = () => {
             <Button
               size="default"
               variant="primary"
+              aria-label="Sign up"
               onClick={() => navigate("/signup")}
             >
               Sign Up
@@ -57,9 +59,12 @@ export const Navbar = () => {
                 variant="icon"
                 className={styles.iconButton}
                 onClick={() => navigate("/profile")}
-                aria-label="Go to Profile"
+                aria-label="Profile"
+                size="icon"
+                type="button"
               >
                 <MdAccountCircle className={styles.profile} />
+                <span className={styles.iconText}>Profile</span>
               </Button>
             </li>
             <li>
@@ -67,11 +72,12 @@ export const Navbar = () => {
                 variant="icon"
                 className={styles.iconButton}
                 onClick={handleLogout}
-                aria-label="Log out"
+                aria-label="Logout"
                 size="icon"
                 type="button"
               >
                 <IoIosLogOut className={styles.logout} />
+                <span className={styles.iconText}>Logout</span>
               </Button>
             </li>
           </>

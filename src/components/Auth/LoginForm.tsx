@@ -57,7 +57,13 @@ export const LoginForm = () => {
       </div>
       {error && <p>{error}</p>}
       <div className={styles.formButton}>
-        <Button type="submit" size="large" variant="primary" disabled={loading}>
+        <Button
+          type="submit"
+          size="large"
+          variant="primary"
+          disabled={loading}
+          aria-label="Login"
+        >
           {loading ? "Logging in..." : "Login"}
         </Button>
       </div>

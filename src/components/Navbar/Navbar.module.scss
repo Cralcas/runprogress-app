@@ -1,6 +1,5 @@
 @use "../../sass/globals/variables" as *;
 @use "../../sass/globals/media-queries" as *;
-@use "sass:color";
 
 .nav {
   display: flex;
@@ -31,8 +30,7 @@
   }
 }
 
-.iconButton,
-.logoutButton {
+.iconButton {
   background: none;
   border: none;
   cursor: pointer;
@@ -40,23 +38,28 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 2.3rem;
+
+  @include for-desktop {
+    font-size: 3rem;
+  }
 }
 
 .logout {
   color: $warning-color;
-
-  &:hover {
-    color: color.adjust($warning-color, $lightness: -10%);
-  }
 }
 
 .profile {
   color: $primary-color;
+}
 
-  transition: color 0.3s ease;
-  cursor: pointer;
+.iconText {
+  display: none;
+  font-size: 1rem;
+  font-weight: bold;
+  color: $secondary-color;
 
-  &:hover {
-    color: color.adjust($primary-color, $lightness: -10%);
+  @include for-desktop {
+    display: inline-block;
   }
 }

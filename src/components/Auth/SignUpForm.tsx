@@ -75,7 +75,13 @@ export const SignUpForm = () => {
       {successMessage && <div>{successMessage}</div>}
 
       <div className={styles.formButton}>
-        <Button type="submit" size="large" variant="primary" disabled={loading}>
+        <Button
+          type="submit"
+          size="large"
+          variant="primary"
+          disabled={loading}
+          aria-label="Sign up"
+        >
           {loading ? "Signing up..." : "Sign Up"}
         </Button>
       </div>
