@@ -21,6 +21,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       if (error) {
         console.error("Error getting session:", error.message);
+        supabase.auth.signOut();
         return;
       }
 
