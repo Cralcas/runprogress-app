@@ -1,0 +1,29 @@
+.home-section {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 1.5rem;
+  height: 100%;
+}
+
+.home-goal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+
+  .goal-buttons {
+    display: flex;
+    gap: 1rem;
+  }
+}
+
+.home-posts {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #222;
+  overflow-y: auto;
+  height: 100%;
+}
