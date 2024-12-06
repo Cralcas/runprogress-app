@@ -12,10 +12,10 @@ type SignUpResponse = {
   session: Session | null;
 };
 
-const checkExistingUser = async (
+async function checkExistingUser(
   email: string,
   username: string
-): Promise<UserProfile> => {
+): Promise<UserProfile> {
   const { data, error } = await supabase
     .from("profiles")
     .select("id, email, username")
@@ -28,13 +28,13 @@ const checkExistingUser = async (
   }
 
   return data;
-};
+}
 
-export const signUpUser = async (
+export async function signUpUser(
   email: string,
   password: string,
   username: string
-): Promise<SignUpResponse> => {
+): Promise<SignUpResponse> {
   const existingUser = await checkExistingUser(email, username);
   if (existingUser) {
     if (existingUser.email === email) {
@@ -63,4 +63,4 @@ export const signUpUser = async (
   }
 
   return data;
-};
+}

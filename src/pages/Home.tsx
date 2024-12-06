@@ -4,20 +4,28 @@ import { Progress } from "../components/Progress/Progress";
 import { getWeekStartDate } from "../utilities/dateFormat";
 import { GoalModal } from "../components/GoalModal/GoalModal";
 import { GoalForm } from "../GoalForm.tsx/GoalForm";
-import { getGoal } from "../services/goalService";
+import { getGoal, saveGoal, updateGoal } from "../services/goalService";
+import { useAuth } from "../hooks/useAuth";
 import { supabase } from "../database/supabase-client";
 
+interface IGoalData {
+  goal: number;
+  progress: number;
+}
+
 export const Home = () => {
-  const [goalData, setGoalData] = useState({ goal: 0, progress: 0 });
-  const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
+  const [goalData, setGoalData] = useState<IGoalData>({ goal: 0, progress: 0 });
+  const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
+
   useEffect(() => {
-    const fetchGoalAndProgress = async () => {
+    async function loadGoalData() {
       setLoading(true);
 
       try {
-        const data = await getGoal();
-
+        const weekStart = getWeekStartDate();
+        const data = await getGoal(weekStart);
         if (data) {
           setGoalData({
             goal: data.weekly_goal || 0,
@@ -25,50 +33,43 @@ export const Home = () => {
           });
         }
       } catch (error) {
-        console.error("Error fetching goals:", error);
+        console.error("Error fetching goal:", error);
       } finally {
         setLoading(false);
       }
-    };
+    }
 
-    fetchGoalAndProgress();
+    loadGoalData();
   }, []);
 
   const handleSetGoal = async (newGoal: number) => {
+    if (!user) {
+      console.error("User is undefined");
+      return;
+    }
+
     const weekStart = getWeekStartDate();
 
-    const { data: existingGoal, error: fetchError } = await supabase
-      .from("goals")
-      .select("*")
-      .eq("week_start", weekStart)
-      .maybeSingle();
-
-    if (fetchError) {
-      console.error("Error fetching existing goal:", fetchError.message);
-      return;
-    }
-
-    let response;
-    if (existingGoal) {
-      response = await supabase
+    try {
+      const { data: existingGoal } = await supabase
         .from("goals")
-        .update({ weekly_goal: newGoal })
-        .eq("id", existingGoal.id);
-    } else {
-      response = await supabase
-        .from("goals")
-        .insert([{ weekly_goal: newGoal, week_start: weekStart }]);
-    }
+        .select("*")
+        .eq("week_start", weekStart)
+        .maybeSingle();
 
-    if (response.error) {
-      console.error("Error saving goal:", response.error.message);
-      return;
-    }
+      if (existingGoal) {
+        await updateGoal({ weekStart, newGoal });
+      } else {
+        await saveGoal({ weekStart, userId: user.id, newGoal });
+      }
 
-    setGoalData((prevData) => ({
-      ...prevData,
-      goal: newGoal,
-    }));
+      setGoalData((prevData) => ({
+        ...prevData,
+        goal: newGoal,
+      }));
+    } catch (error) {
+      console.error("Error in handleSetGoal:", error);
+    }
 
     setShowModal(false);
   };
