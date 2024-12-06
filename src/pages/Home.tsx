@@ -58,7 +58,7 @@ export const Home = () => {
         .maybeSingle();
 
       if (existingGoal) {
-        await updateGoal({ weekStart, newGoal });
+        await updateGoal(weekStart, existingGoal, newGoal);
       } else {
         await saveGoal({ weekStart, userId: user.id, newGoal });
       }

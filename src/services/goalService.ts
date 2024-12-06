@@ -61,38 +61,21 @@ export async function saveGoal({ weekStart, userId, newGoal }: IGoal) {
   }
 }
 
-export async function updateGoal({
-  weekStart,
-  newGoal,
-}: {
-  weekStart: string;
-  newGoal: number;
-}) {
+export async function updateGoal(
+  weekStart: string,
+  existingGoal: IGoalResponse,
+  newGoal: number
+) {
   try {
-    const { data: existingGoal, error } = await supabase
-      .from("goals")
-      .select("*")
-      .eq("week_start", weekStart)
-      .maybeSingle();
-
-    if (error) {
-      console.error("Error finding goal: ", error);
-      return null;
-    }
-
-    if (!existingGoal) {
-      console.error("No existing goal found for the week");
-      return null;
-    }
-
-    const { error: updateError } = await supabase
+    const { error } = await supabase
       .from("goals")
       .update({ weekly_goal: newGoal })
       .eq("id", existingGoal.id)
+      .eq("week_start", weekStart)
       .single();
 
-    if (updateError) {
-      console.error("Error updating goal: ", updateError);
+    if (error) {
+      console.error("Error updating goal: ", error);
       return null;
     }
   } catch (err) {
