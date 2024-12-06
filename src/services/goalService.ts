@@ -1,11 +1,13 @@
 import { supabase } from "../database/supabase-client";
+import { getWeekStartDate } from "../utilities/dateFormat";
 
-export const getGoal = async (userId: string, weekStart: string) => {
+const weekStart = getWeekStartDate();
+
+export const getGoal = async () => {
   try {
     const { data, error } = await supabase
       .from("goals")
       .select("*")
-      .eq("user_id", userId)
       .eq("week_start", weekStart)
       .maybeSingle();
 

@@ -2,10 +2,11 @@ import { FormEvent, useState } from "react";
 import { Button } from "../components/Button/Button";
 
 interface GoalFormProps {
+  currentGoal: number;
   onSetGoal: (newGoal: number) => void;
 }
-export const GoalForm = ({ onSetGoal }: GoalFormProps) => {
-  const [localGoal, setLocalGoal] = useState(0);
+export const GoalForm = ({ onSetGoal, currentGoal }: GoalFormProps) => {
+  const [localGoal, setLocalGoal] = useState(currentGoal);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();

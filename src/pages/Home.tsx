@@ -2,35 +2,27 @@ import { useEffect, useState } from "react";
 import { Button } from "../components/Button/Button";
 import { Progress } from "../components/Progress/Progress";
 import { getWeekStartDate } from "../utilities/dateFormat";
-import { useAuth } from "../hooks/useAuth";
 import { GoalModal } from "../components/GoalModal/GoalModal";
 import { GoalForm } from "../GoalForm.tsx/GoalForm";
 import { getGoal } from "../services/goalService";
 import { supabase } from "../database/supabase-client";
 
 export const Home = () => {
-  const { user } = useAuth();
-  const [goal, setGoal] = useState(0);
-  const [progress, setProgress] = useState(0);
+  const [goalData, setGoalData] = useState({ goal: 0, progress: 0 });
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
-
   useEffect(() => {
     const fetchGoalAndProgress = async () => {
-      if (!user?.id) {
-        console.warn("User ID is undefined.");
-        return;
-      }
-
       setLoading(true);
 
       try {
-        const weekStart = getWeekStartDate();
-        const data = await getGoal(user.id, weekStart);
+        const data = await getGoal();
 
         if (data) {
-          setGoal(data.weekly_goal || 0);
-          setProgress(data.goal_progress || 0);
+          setGoalData({
+            goal: data.weekly_goal || 0,
+            progress: data.goal_progress || 0,
+          });
         }
       } catch (error) {
         console.error("Error fetching goals:", error);
@@ -40,29 +32,44 @@ export const Home = () => {
     };
 
     fetchGoalAndProgress();
-  }, [user?.id]);
+  }, []);
 
   const handleSetGoal = async (newGoal: number) => {
-    if (!user?.id) {
-      console.warn("User ID is undefined.");
-      return;
-    }
-
     const weekStart = getWeekStartDate();
-    const { error } = await supabase
 
+    const { data: existingGoal, error: fetchError } = await supabase
       .from("goals")
-      .insert([
-        { user_id: user?.id, weekly_goal: newGoal, week_start: weekStart },
-      ])
-      .select();
+      .select("*")
+      .eq("week_start", weekStart)
+      .maybeSingle();
 
-    if (error) {
-      console.error("Error inserting goal:", error.message);
+    if (fetchError) {
+      console.error("Error fetching existing goal:", fetchError.message);
       return;
     }
 
-    setGoal(newGoal);
+    let response;
+    if (existingGoal) {
+      response = await supabase
+        .from("goals")
+        .update({ weekly_goal: newGoal })
+        .eq("id", existingGoal.id);
+    } else {
+      response = await supabase
+        .from("goals")
+        .insert([{ weekly_goal: newGoal, week_start: weekStart }]);
+    }
+
+    if (response.error) {
+      console.error("Error saving goal:", response.error.message);
+      return;
+    }
+
+    setGoalData((prevData) => ({
+      ...prevData,
+      goal: newGoal,
+    }));
+
     setShowModal(false);
   };
 
@@ -74,7 +81,7 @@ export const Home = () => {
         {loading ? (
           <p>Loading...</p>
         ) : (
-          <Progress goal={goal} progress={progress} />
+          <Progress goal={goalData.goal} progress={goalData.progress} />
         )}
 
         <div className="goal-buttons">
@@ -86,7 +93,7 @@ export const Home = () => {
 
       {showModal && (
         <GoalModal onClose={() => setShowModal(false)}>
-          <GoalForm onSetGoal={handleSetGoal} />
+          <GoalForm onSetGoal={handleSetGoal} currentGoal={goalData.goal} />
         </GoalModal>
       )}
       <div className="home-posts">Posts</div>

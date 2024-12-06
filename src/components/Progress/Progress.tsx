@@ -1,5 +1,5 @@
 interface IProgressProps {
-  goal: number | null;
+  goal: number;
   progress: number;
 }
 
