@@ -1,7 +1,7 @@
 import { FormEvent, useState } from "react";
-import { signUpUser } from "../../services/userService";
 import styles from "./AuthForm.module.scss";
 import { Button } from "../Button/Button";
+import { supabase } from "../../database/supabase-client";
 
 export const SignUpForm = () => {
   const [email, setEmail] = useState("");
@@ -18,17 +18,24 @@ export const SignUpForm = () => {
     setSuccessMessage("");
 
     try {
-      const data = await signUpUser(email, password, username);
+      const { data: createdUser } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { username },
+          emailRedirectTo: "http://localhost:5173/login",
+        },
+      });
 
-      if (data?.user) {
-        setSuccessMessage("Account created, confirm via email.");
+      const emailIsTaken = createdUser.user?.identities?.length === 0;
+      if (emailIsTaken) {
+        setError("Email is already taken. Please use a different email.");
+        return;
       }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError("An unknown error occurred. Please try again.");
-      }
+
+      setSuccessMessage("Account created, confirm via email.");
+    } catch (err) {
+      setError("An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
