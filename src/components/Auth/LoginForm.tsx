@@ -8,27 +8,26 @@ export const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = async (event: FormEvent) => {
+  async function handleLogin(event: FormEvent) {
     event.preventDefault();
+    setError("");
     setLoading(true);
-    setError(null);
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-    try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      if (error) throw error;
-      navigate("/");
-    } catch (err) {
+    if (error) {
       setError("Login failed. Please try again.");
-    } finally {
-      setLoading(false);
+    } else {
+      navigate("/");
     }
-  };
+
+    setLoading(false);
+  }
 
   return (
     <form className={styles.form} onSubmit={handleLogin}>

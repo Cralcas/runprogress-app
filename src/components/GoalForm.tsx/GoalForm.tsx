@@ -1,5 +1,6 @@
 import { FormEvent, useState } from "react";
-import { Button } from "../components/Button/Button";
+import { Button } from "../Button/Button";
+import styles from "./GoalForm.module.scss";
 
 interface GoalFormProps {
   currentGoal: number;
@@ -29,20 +30,25 @@ export const GoalForm = ({ onSetGoal, currentGoal }: GoalFormProps) => {
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="goal">Enter Goal</label>
-          <input
-            type="number"
-            id="goal"
-            max="999"
-            value={localGoal || ""}
-            onChange={handleGoalChange}
-            required
-          />
-          <span>/Km</span>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.goalDetails}>
+          <div className={styles.input}>
+            <label htmlFor="goal">Weekly Goal</label>
+            <input
+              className={styles.field}
+              type="number"
+              id="goal"
+              max="999"
+              value={localGoal || ""}
+              onChange={handleGoalChange}
+              required
+            />
+          </div>
+          <span className={styles.unit}>Km</span>
         </div>
-        <Button type="submit">Set Goal</Button>
+        <Button type="submit" className={styles.goalButton}>
+          Set Goal
+        </Button>
       </form>
     </>
   );

@@ -11,12 +11,12 @@ export const SignUpForm = () => {
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  const handleCreateUser = async (event: FormEvent) => {
+  async function handleCreateUser(event: FormEvent) {
     event.preventDefault();
-    setLoading(true);
     setError("");
     setSuccessMessage("");
 
+    setLoading(true);
     try {
       const { data: createdUser } = await supabase.auth.signUp({
         email,
@@ -39,7 +39,7 @@ export const SignUpForm = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   return (
     <form className={styles.form} onSubmit={handleCreateUser}>

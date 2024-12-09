@@ -1,4 +1,4 @@
-export const getWeekStartDate = () => {
+export function getWeekStartDate() {
   const now = new Date();
 
   const dayOfWeek = now.getDay();
@@ -10,4 +10,4 @@ export const getWeekStartDate = () => {
   now.setHours(0, 0, 0, 0);
 
   return now.toISOString();
-};
+}

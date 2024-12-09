@@ -3,10 +3,11 @@ import { Button } from "../components/Button/Button";
 import { Progress } from "../components/Progress/Progress";
 import { getWeekStartDate } from "../utilities/dateFormat";
 import { GoalModal } from "../components/GoalModal/GoalModal";
-import { GoalForm } from "../GoalForm.tsx/GoalForm";
+import { GoalForm } from "../components/GoalForm.tsx/GoalForm";
 import { getGoal, saveGoal, updateGoal } from "../services/goalService";
 import { useAuth } from "../hooks/useAuth";
 import { supabase } from "../database/supabase-client";
+import { PostModal } from "../components/PostModal/PostModal";
 
 interface IGoalData {
   goal: number;
@@ -17,15 +18,25 @@ export const Home = () => {
   const { user } = useAuth();
   const [goalData, setGoalData] = useState<IGoalData>({ goal: 0, progress: 0 });
   const [loading, setLoading] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [modals, setModals] = useState({
+    goalModal: false,
+    postModal: false,
+  });
+
+  function toggleModal(modalName: keyof typeof modals) {
+    setModals((prev) => ({
+      ...prev,
+      [modalName]: !prev[modalName],
+    }));
+  }
 
   useEffect(() => {
     async function loadGoalData() {
       setLoading(true);
-
       try {
         const weekStart = getWeekStartDate();
         const data = await getGoal(weekStart);
+
         if (data) {
           setGoalData({
             goal: data.weekly_goal || 0,
@@ -33,7 +44,7 @@ export const Home = () => {
           });
         }
       } catch (error) {
-        console.error("Error fetching goal:", error);
+        console.error("Error loading goal data:", error);
       } finally {
         setLoading(false);
       }
@@ -42,7 +53,7 @@ export const Home = () => {
     loadGoalData();
   }, []);
 
-  const handleSetGoal = async (newGoal: number) => {
+  async function handleSetGoal(newGoal: number) {
     if (!user) {
       console.error("User is undefined");
       return;
@@ -71,8 +82,8 @@ export const Home = () => {
       console.error("Error in handleSetGoal:", error);
     }
 
-    setShowModal(false);
-  };
+    toggleModal("goalModal");
+  }
 
   return (
     <section className="home-section">
@@ -86,17 +97,27 @@ export const Home = () => {
         )}
 
         <div className="goal-buttons">
-          <Button type="button" onClick={() => setShowModal(true)}>
+          <Button type="button" onClick={() => toggleModal("goalModal")}>
             Set Goal
+          </Button>
+          <Button type="button" onClick={() => toggleModal("postModal")}>
+            + Create Post
           </Button>
         </div>
       </div>
 
-      {showModal && (
-        <GoalModal onClose={() => setShowModal(false)}>
+      {modals.goalModal && (
+        <GoalModal onClose={() => toggleModal("goalModal")}>
           <GoalForm onSetGoal={handleSetGoal} currentGoal={goalData.goal} />
         </GoalModal>
       )}
+
+      {modals.postModal && (
+        <PostModal onClose={() => toggleModal("postModal")}>
+          <p>post modal</p>
+        </PostModal>
+      )}
+
       <div className="home-posts">Posts</div>
     </section>
   );
