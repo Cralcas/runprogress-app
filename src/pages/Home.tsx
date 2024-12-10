@@ -8,6 +8,7 @@ import { getGoal, saveGoal, updateGoal } from "../services/goalService";
 import { useAuth } from "../hooks/useAuth";
 import { supabase } from "../database/supabase-client";
 import { PostModal } from "../components/PostModal/PostModal";
+import { PostForm } from "../components/PostForm/PostForm";
 
 interface IGoalData {
   goal: number;
@@ -114,7 +115,7 @@ export const Home = () => {
 
       {modals.postModal && (
         <PostModal onClose={() => toggleModal("postModal")}>
-          <p>post modal</p>
+          <PostForm />
         </PostModal>
       )}
 

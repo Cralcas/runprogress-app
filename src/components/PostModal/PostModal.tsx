@@ -22,6 +22,7 @@ export const PostModal = ({ onClose, children }: PostModalProps) => {
         >
           <IoIosClose />
         </Button>
+        <h2 className={styles.header}>Post</h2>
         {children}
       </div>
     </div>

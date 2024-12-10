@@ -33,7 +33,7 @@ export const GoalForm = ({ onSetGoal, currentGoal }: GoalFormProps) => {
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.goalDetails}>
           <div className={styles.input}>
-            <label htmlFor="goal">Weekly Goal</label>
+            <label htmlFor="goal">Distance</label>
             <input
               className={styles.field}
               type="number"

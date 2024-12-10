@@ -22,6 +22,7 @@ export const GoalModal = ({ onClose, children }: GoalModalProps) => {
         >
           <IoIosClose />
         </Button>
+        <h2 className={styles.header}>Goal</h2>
         {children}
       </div>
     </div>
