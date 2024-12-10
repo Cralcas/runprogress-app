@@ -1,7 +1,7 @@
 import { supabase } from "../database/supabase-client";
+import { getWeekInterval } from "../utilities/dateFormat";
 
 interface IGoal {
-  weekStart: string;
   userId: string;
   newGoal: number;
 }
@@ -12,18 +12,18 @@ interface IGoalResponse {
   id: string;
   updated_at: string | null;
   user_id: string;
-  week_start: string;
   weekly_goal: number | null;
 }
 
-export async function getGoal(
-  weekStart: string
-): Promise<IGoalResponse | null> {
+export async function getGoal(): Promise<IGoalResponse | null> {
   try {
+    const { start, end } = getWeekInterval();
+
     const { data, error } = await supabase
       .from("goals")
       .select("*")
-      .eq("week_start", weekStart)
+      .gte("created_at", start)
+      .lte("created_at", end)
       .maybeSingle();
 
     if (error) {
@@ -38,7 +38,7 @@ export async function getGoal(
   }
 }
 
-export async function saveGoal({ weekStart, userId, newGoal }: IGoal) {
+export async function saveGoal({ userId, newGoal }: IGoal) {
   try {
     const { error } = await supabase
       .from("goals")
@@ -46,7 +46,6 @@ export async function saveGoal({ weekStart, userId, newGoal }: IGoal) {
         {
           user_id: userId,
           weekly_goal: newGoal,
-          week_start: weekStart,
         },
       ])
       .single();
@@ -61,17 +60,16 @@ export async function saveGoal({ weekStart, userId, newGoal }: IGoal) {
   }
 }
 
-export async function updateGoal(
-  weekStart: string,
-  existingGoal: IGoalResponse,
-  newGoal: number
-) {
+export async function updateGoal(existingGoal: IGoalResponse, newGoal: number) {
   try {
+    const { start, end } = getWeekInterval();
+
     const { error } = await supabase
       .from("goals")
       .update({ weekly_goal: newGoal })
       .eq("id", existingGoal.id)
-      .eq("week_start", weekStart)
+      .gte("created_at", start)
+      .lte("created_at", end)
       .single();
 
     if (error) {

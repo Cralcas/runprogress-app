@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "../components/Button/Button";
 import { Progress } from "../components/Progress/Progress";
-import { getWeekStartDate } from "../utilities/dateFormat";
+import { getWeekInterval } from "../utilities/dateFormat";
 import { GoalModal } from "../components/GoalModal/GoalModal";
 import { GoalForm } from "../components/GoalForm.tsx/GoalForm";
 import { getGoal, saveGoal, updateGoal } from "../services/goalService";
@@ -35,8 +35,7 @@ export const Home = () => {
     async function loadGoalData() {
       setLoading(true);
       try {
-        const weekStart = getWeekStartDate();
-        const data = await getGoal(weekStart);
+        const data = await getGoal();
 
         if (data) {
           setGoalData({
@@ -60,19 +59,21 @@ export const Home = () => {
       return;
     }
 
-    const weekStart = getWeekStartDate();
+    const { start, end } = getWeekInterval();
 
     try {
       const { data: existingGoal } = await supabase
         .from("goals")
         .select("*")
-        .eq("week_start", weekStart)
+        .gte("created_at", start)
+        .lte("created_at", end)
+        .eq("user_id", user.id)
         .maybeSingle();
 
       if (existingGoal) {
-        await updateGoal(weekStart, existingGoal, newGoal);
+        await updateGoal(existingGoal, newGoal);
       } else {
-        await saveGoal({ weekStart, userId: user.id, newGoal });
+        await saveGoal({ userId: user.id, newGoal });
       }
 
       setGoalData((prevData) => ({
