@@ -4,28 +4,15 @@ import styles from "./GoalForm.module.scss";
 
 interface GoalFormProps {
   currentGoal: number;
-  onSetGoal: (newGoal: number) => void;
+  handleSubmitGoal: (newGoal: number) => void;
 }
-export const GoalForm = ({ onSetGoal, currentGoal }: GoalFormProps) => {
+export const GoalForm = ({ handleSubmitGoal, currentGoal }: GoalFormProps) => {
   const [localGoal, setLocalGoal] = useState(currentGoal);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
-    if (localGoal <= 0) {
-      alert("Please enter a valid goal.");
-      return;
-    }
-
-    onSetGoal(localGoal);
-  };
-
-  const handleGoalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-
-    if (/^\d*\.?\d*$/.test(value)) {
-      setLocalGoal(value ? parseFloat(value) : 0);
-    }
+    handleSubmitGoal(localGoal);
   };
 
   return (
@@ -38,14 +25,18 @@ export const GoalForm = ({ onSetGoal, currentGoal }: GoalFormProps) => {
               className={styles.field}
               type="number"
               id="goal"
-              max="999"
+              max={999}
+              min={1}
               value={localGoal || ""}
-              onChange={handleGoalChange}
+              onChange={(e) => {
+                setLocalGoal(Number(e.target.value));
+              }}
               required
             />
           </div>
-          <span className={styles.unit}>Km</span>
+          <p className={styles.unit}>Km</p>
         </div>
+
         <Button type="submit" className={styles.goalButton}>
           Set Goal
         </Button>

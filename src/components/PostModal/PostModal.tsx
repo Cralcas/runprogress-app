@@ -1,15 +1,14 @@
-import { ReactNode } from "react";
-
 import styles from "./PostModal.module.scss";
 import { Button } from "../Button/Button";
 import { IoIosClose } from "react-icons/io";
+import { IPost, PostForm } from "../PostForm/PostForm";
 
 interface PostModalProps {
   onClose: () => void;
-  children: ReactNode;
+  handleSubmitPost: (post: IPost) => void;
 }
 
-export const PostModal = ({ onClose, children }: PostModalProps) => {
+export const PostModal = ({ onClose, handleSubmitPost }: PostModalProps) => {
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.content} onClick={(e) => e.stopPropagation()}>
@@ -23,7 +22,7 @@ export const PostModal = ({ onClose, children }: PostModalProps) => {
           <IoIosClose />
         </Button>
         <h2 className={styles.header}>Post</h2>
-        {children}
+        <PostForm toggleModal={onClose} handleSubmitPost={handleSubmitPost} />
       </div>
     </div>
   );

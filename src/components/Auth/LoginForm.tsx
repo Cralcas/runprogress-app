@@ -15,18 +15,24 @@ export const LoginForm = () => {
     event.preventDefault();
     setError("");
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
 
-    if (error) {
-      setError("Login failed. Please try again.");
-    } else {
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        setError("Login failed. Please try again.");
+        return;
+      }
+
       navigate("/");
+    } catch (err) {
+      setError("An unexpected error occurred.");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   }
 
   return (

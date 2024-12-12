@@ -3,21 +3,30 @@ import { Button } from "../components/Button/Button";
 import { Progress } from "../components/Progress/Progress";
 import { getWeekInterval } from "../utilities/dateFormat";
 import { GoalModal } from "../components/GoalModal/GoalModal";
-import { GoalForm } from "../components/GoalForm.tsx/GoalForm";
-import { getGoal, saveGoal, updateGoal } from "../services/goalService";
+import { getGoal, createGoal, updateGoal } from "../services/goalService";
 import { useAuth } from "../hooks/useAuth";
 import { supabase } from "../database/supabase-client";
 import { PostModal } from "../components/PostModal/PostModal";
-import { PostForm } from "../components/PostForm/PostForm";
+import { IPost } from "../components/PostForm/PostForm";
+import { savePost } from "../services/postService";
 
 interface IGoalData {
   goal: number;
   progress: number;
 }
 
+interface IWeekInterval {
+  start: string;
+  end: string;
+}
+
 export const Home = () => {
   const { user } = useAuth();
   const [goalData, setGoalData] = useState<IGoalData>({ goal: 0, progress: 0 });
+  const [weekInterval, setWeekInterval] = useState<IWeekInterval>({
+    start: "",
+    end: "",
+  });
   const [loading, setLoading] = useState(false);
   const [modals, setModals] = useState({
     goalModal: false,
@@ -35,14 +44,19 @@ export const Home = () => {
     async function loadGoalData() {
       setLoading(true);
       try {
-        const data = await getGoal();
+        const currentWeek = getWeekInterval();
 
-        if (data) {
-          setGoalData({
-            goal: data.weekly_goal || 0,
-            progress: data.goal_progress || 0,
-          });
-        }
+        setWeekInterval({
+          start: currentWeek.start,
+          end: currentWeek.end,
+        });
+
+        const data = await getGoal(currentWeek.start, currentWeek.end);
+
+        setGoalData({
+          goal: data.weekly_goal,
+          progress: data.goal_progress,
+        });
       } catch (error) {
         console.error("Error loading goal data:", error);
       } finally {
@@ -53,7 +67,7 @@ export const Home = () => {
     loadGoalData();
   }, []);
 
-  async function handleSetGoal(newGoal: number) {
+  async function handleSubmitGoal(newGoal: number) {
     if (!user) {
       console.error("User is undefined");
       return;
@@ -73,7 +87,7 @@ export const Home = () => {
       if (existingGoal) {
         await updateGoal(existingGoal, newGoal);
       } else {
-        await saveGoal({ userId: user.id, newGoal });
+        await createGoal({ userId: user.id, newGoal });
       }
 
       setGoalData((prevData) => ({
@@ -85,6 +99,22 @@ export const Home = () => {
     }
 
     toggleModal("goalModal");
+  }
+
+  async function handleSubmitPost(post: IPost) {
+    if (!user) {
+      console.error("User is undefined");
+      return;
+    }
+
+    await savePost(post, user.id);
+
+    const updatedGoal = await getGoal(weekInterval.start, weekInterval.end);
+
+    setGoalData((prevGoalData) => ({
+      ...prevGoalData,
+      progress: updatedGoal.goal_progress,
+    }));
   }
 
   return (
@@ -107,20 +137,22 @@ export const Home = () => {
           </Button>
         </div>
       </div>
+      <div className="home-posts">Posts</div>
 
       {modals.goalModal && (
-        <GoalModal onClose={() => toggleModal("goalModal")}>
-          <GoalForm onSetGoal={handleSetGoal} currentGoal={goalData.goal} />
-        </GoalModal>
+        <GoalModal
+          onClose={() => toggleModal("goalModal")}
+          handleSubmitGoal={handleSubmitGoal}
+          currentGoal={goalData.goal}
+        ></GoalModal>
       )}
 
       {modals.postModal && (
-        <PostModal onClose={() => toggleModal("postModal")}>
-          <PostForm />
-        </PostModal>
+        <PostModal
+          onClose={() => toggleModal("postModal")}
+          handleSubmitPost={handleSubmitPost}
+        ></PostModal>
       )}
-
-      <div className="home-posts">Posts</div>
     </section>
   );
 };

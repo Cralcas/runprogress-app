@@ -7,77 +7,60 @@ interface IGoal {
 }
 
 interface IGoalResponse {
-  created_at: string | null;
-  goal_progress: number | null;
+  goal_progress: number;
   id: string;
-  updated_at: string | null;
   user_id: string;
-  weekly_goal: number | null;
+  weekly_goal: number;
 }
 
-export async function getGoal(): Promise<IGoalResponse | null> {
-  try {
-    const { start, end } = getWeekInterval();
+export async function getGoal(
+  start: string,
+  end: string
+): Promise<IGoalResponse> {
+  const { data, error } = await supabase
+    .from("goals")
+    .select("*")
+    .gte("created_at", start)
+    .lte("created_at", end)
+    .maybeSingle();
 
-    const { data, error } = await supabase
-      .from("goals")
-      .select("*")
-      .gte("created_at", start)
-      .lte("created_at", end)
-      .maybeSingle();
-
-    if (error) {
-      console.error("Error finding goal: ", error.message);
-      return null;
-    }
-
-    return data;
-  } catch (err) {
-    console.error("Error fetching goal:", err);
-    throw err;
+  if (error || !data) {
+    throw error;
   }
+
+  return data;
 }
 
-export async function saveGoal({ userId, newGoal }: IGoal) {
-  try {
-    const { error } = await supabase
-      .from("goals")
-      .insert([
-        {
-          user_id: userId,
-          weekly_goal: newGoal,
-        },
-      ])
-      .single();
+export async function createGoal({ userId, newGoal }: IGoal) {
+  const { error } = await supabase
+    .from("goals")
+    .insert([
+      {
+        user_id: userId,
+        weekly_goal: newGoal,
+      },
+    ])
+    .single();
 
-    if (error) {
-      console.error("Error saving goal: ", error);
-      return null;
-    }
-  } catch (err) {
-    console.error("Error saving goal:", err);
-    throw err;
+  if (error) {
+    console.error("Error saving goal:", error);
+    throw error;
   }
 }
 
 export async function updateGoal(existingGoal: IGoalResponse, newGoal: number) {
-  try {
-    const { start, end } = getWeekInterval();
+  const { start, end } = getWeekInterval();
 
-    const { error } = await supabase
-      .from("goals")
-      .update({ weekly_goal: newGoal })
-      .eq("id", existingGoal.id)
-      .gte("created_at", start)
-      .lte("created_at", end)
-      .single();
+  const { error } = await supabase
+    .from("goals")
+    .update({ weekly_goal: newGoal })
+    .eq("id", existingGoal.id)
+    .gte("created_at", start)
+    .lte("created_at", end)
+    .single();
 
-    if (error) {
-      console.error("Error updating goal: ", error);
-      return null;
-    }
-  } catch (err) {
-    console.error("Error updating goal:", err);
-    throw err;
+  if (error) {
+    console.error("Error updating goal:", error);
+    throw error;
   }
 }

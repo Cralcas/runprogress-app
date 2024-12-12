@@ -1,15 +1,19 @@
-import { ReactNode } from "react";
-
 import styles from "./GoalModal.module.scss";
 import { Button } from "../Button/Button";
 import { IoIosClose } from "react-icons/io";
+import { GoalForm } from "../GoalForm.tsx/GoalForm";
 
 interface GoalModalProps {
   onClose: () => void;
-  children: ReactNode;
+  currentGoal: number;
+  handleSubmitGoal: (newGoal: number) => void;
 }
 
-export const GoalModal = ({ onClose, children }: GoalModalProps) => {
+export const GoalModal = ({
+  onClose,
+  currentGoal,
+  handleSubmitGoal,
+}: GoalModalProps) => {
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.content} onClick={(e) => e.stopPropagation()}>
@@ -23,7 +27,10 @@ export const GoalModal = ({ onClose, children }: GoalModalProps) => {
           <IoIosClose />
         </Button>
         <h2 className={styles.header}>Goal</h2>
-        {children}
+        <GoalForm
+          currentGoal={currentGoal}
+          handleSubmitGoal={handleSubmitGoal}
+        />
       </div>
     </div>
   );
