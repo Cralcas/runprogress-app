@@ -7,8 +7,8 @@ import { getGoal, createGoal, updateGoal } from "../services/goalService";
 import { useAuth } from "../hooks/useAuth";
 import { supabase } from "../database/supabase-client";
 import { PostModal } from "../components/PostModal/PostModal";
-import { IPost } from "../components/PostForm/PostForm";
-import { savePost } from "../services/postService";
+import { createPost, getPosts } from "../services/postService";
+import { IPost } from "../models/IPost";
 
 interface IGoalData {
   goal: number;
@@ -23,15 +23,20 @@ interface IWeekInterval {
 export const Home = () => {
   const { user } = useAuth();
   const [goalData, setGoalData] = useState<IGoalData>({ goal: 0, progress: 0 });
+  const [posts, setPosts] = useState<IPost[]>([]);
+
+  const currentWeek = getWeekInterval();
+
   const [weekInterval, setWeekInterval] = useState<IWeekInterval>({
-    start: "",
-    end: "",
+    start: currentWeek.start,
+    end: currentWeek.end,
   });
-  const [loading, setLoading] = useState(false);
+
   const [modals, setModals] = useState({
     goalModal: false,
     postModal: false,
   });
+  const [loading, setLoading] = useState(false);
 
   function toggleModal(modalName: keyof typeof modals) {
     setModals((prev) => ({
@@ -40,32 +45,28 @@ export const Home = () => {
     }));
   }
 
-  useEffect(() => {
-    async function loadGoalData() {
-      setLoading(true);
-      try {
-        const currentWeek = getWeekInterval();
+  async function loadGoalAndPosts(currentWeek: IWeekInterval) {
+    setLoading(true);
+    try {
+      const fetchedGoalData = await getGoal(currentWeek.start, currentWeek.end);
+      const fetchedPosts = await getPosts(currentWeek.start, currentWeek.end);
 
-        setWeekInterval({
-          start: currentWeek.start,
-          end: currentWeek.end,
-        });
+      setGoalData({
+        goal: fetchedGoalData.weekly_goal,
+        progress: fetchedGoalData.goal_progress,
+      });
 
-        const data = await getGoal(currentWeek.start, currentWeek.end);
-
-        setGoalData({
-          goal: data.weekly_goal,
-          progress: data.goal_progress,
-        });
-      } catch (error) {
-        console.error("Error loading goal data:", error);
-      } finally {
-        setLoading(false);
-      }
+      setPosts(fetchedPosts);
+    } catch (error) {
+      console.error("Error loading goal data:", error);
+    } finally {
+      setLoading(false);
     }
+  }
 
-    loadGoalData();
-  }, []);
+  useEffect(() => {
+    loadGoalAndPosts(weekInterval);
+  }, [weekInterval]);
 
   async function handleSubmitGoal(newGoal: number) {
     if (!user) {
@@ -87,7 +88,7 @@ export const Home = () => {
       if (existingGoal) {
         await updateGoal(existingGoal, newGoal);
       } else {
-        await createGoal({ userId: user.id, newGoal });
+        await createGoal(user.id, newGoal);
       }
 
       setGoalData((prevData) => ({
@@ -107,7 +108,7 @@ export const Home = () => {
       return;
     }
 
-    await savePost(post, user.id);
+    await createPost(post, user.id);
 
     const updatedGoal = await getGoal(weekInterval.start, weekInterval.end);
 
@@ -137,7 +138,8 @@ export const Home = () => {
           </Button>
         </div>
       </div>
-      <div className="home-posts">Posts</div>
+
+      <div className="home-posts">{/* <Posts /> */}</div>
 
       {modals.goalModal && (
         <GoalModal

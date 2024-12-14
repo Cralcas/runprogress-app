@@ -1,7 +1,8 @@
 import styles from "./PostModal.module.scss";
 import { Button } from "../Button/Button";
 import { IoIosClose } from "react-icons/io";
-import { IPost, PostForm } from "../PostForm/PostForm";
+import { PostForm } from "../PostForm/PostForm";
+import { IPost } from "../../models/IPost";
 
 interface PostModalProps {
   onClose: () => void;

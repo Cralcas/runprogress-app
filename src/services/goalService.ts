@@ -1,11 +1,6 @@
 import { supabase } from "../database/supabase-client";
 import { getWeekInterval } from "../utilities/dateFormat";
 
-interface IGoal {
-  userId: string;
-  newGoal: number;
-}
-
 interface IGoalResponse {
   goal_progress: number;
   id: string;
@@ -31,7 +26,7 @@ export async function getGoal(
   return data;
 }
 
-export async function createGoal({ userId, newGoal }: IGoal) {
+export async function createGoal(userId: string, newGoal: number) {
   const { error } = await supabase
     .from("goals")
     .insert([

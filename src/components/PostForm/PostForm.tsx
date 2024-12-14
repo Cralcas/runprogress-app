@@ -1,14 +1,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Button } from "../Button/Button";
 import { getShoes, IShoe } from "../../services/shoeService";
-
-export interface IPost {
-  title: string;
-  description: string;
-  distance: number;
-  time: string;
-  shoe: string;
-}
+import { IPost } from "../../models/IPost";
 
 interface IPostFormProps {
   toggleModal: () => void;
@@ -19,8 +12,9 @@ export const PostForm = ({ toggleModal, handleSubmitPost }: IPostFormProps) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [distance, setDistance] = useState("");
+  const [pace, setPace] = useState({ minutes: "", seconds: "" });
   const [time, setTime] = useState({ hours: "", minutes: "" });
-  const [shoe, setShoe] = useState("");
+  const [shoe, setShoe] = useState<string | null>("");
   const [shoeList, setShoeList] = useState<IShoe[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -45,17 +39,16 @@ export const PostForm = ({ toggleModal, handleSubmitPost }: IPostFormProps) => {
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
-    //TODO ändra så det inte går att skriva text (ändra till number) i hours och minutes lägga till pace
-    //Fixa om shoe = null
-
     const formattedTime = `${time.hours}h ${time.minutes}m`;
+    const formattedPace = `${pace.minutes}:${pace.seconds} /km`;
 
     const postData: IPost = {
       title,
       description,
       distance: +distance,
+      pace: formattedPace,
       time: formattedTime,
-      shoe: shoe,
+      shoe: shoe || null,
     };
 
     handleSubmitPost(postData);
@@ -76,9 +69,9 @@ export const PostForm = ({ toggleModal, handleSubmitPost }: IPostFormProps) => {
       </div>
       <div>
         <label htmlFor="description">Description</label>
-        <input
-          type="text"
+        <textarea
           id="description"
+          rows={5}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
@@ -94,40 +87,80 @@ export const PostForm = ({ toggleModal, handleSubmitPost }: IPostFormProps) => {
           required
         />
       </div>
+
       <div>
-        <label htmlFor="time">Time</label>
-        <input
-          type="text"
-          value={time.hours}
-          id="hours"
-          onChange={(e) =>
-            setTime((prev) => ({
-              ...prev,
-              hours: e.target.value,
-            }))
-          }
-          placeholder="h"
-        />
-        <input
-          type="text"
-          value={time.minutes}
-          onChange={(e) =>
-            setTime((prev) => ({
-              ...prev,
-              minutes: e.target.value,
-            }))
-          }
-          id="minutes"
-          placeholder="min"
-        />
+        <fieldset>
+          <legend>Pace</legend>
+
+          <label htmlFor="pace-minutes">Minutes</label>
+          <input
+            type="number"
+            value={pace.minutes}
+            id="pace-minutes"
+            onChange={(e) =>
+              setPace((prev) => ({
+                ...prev,
+                minutes: e.target.value,
+              }))
+            }
+            placeholder="min"
+          />
+
+          <label htmlFor="minutes">Seconds</label>
+          <input
+            type="number"
+            value={pace.seconds}
+            id="pace-seconds"
+            onChange={(e) =>
+              setPace((prev) => ({
+                ...prev,
+                seconds: e.target.value,
+              }))
+            }
+            placeholder="s"
+          />
+        </fieldset>
+      </div>
+      <div>
+        <fieldset>
+          <legend>Time</legend>
+
+          <label htmlFor="hours">Hours</label>
+          <input
+            type="number"
+            value={time.hours}
+            id="hours"
+            onChange={(e) =>
+              setTime((prev) => ({
+                ...prev,
+                hours: e.target.value,
+              }))
+            }
+            placeholder="h"
+          />
+
+          <label htmlFor="minutes">Minutes</label>
+          <input
+            type="number"
+            value={time.minutes}
+            id="minutes"
+            onChange={(e) =>
+              setTime((prev) => ({
+                ...prev,
+                minutes: e.target.value,
+              }))
+            }
+            placeholder="min"
+          />
+        </fieldset>
       </div>
       <div>
         <label htmlFor="shoes">Select a shoe</label>
         <select
           name="shoes"
           id="shoes"
-          value={shoe}
-          onChange={(e) => setShoe(e.target.value)}
+          value={shoe || ""}
+          onChange={(e) => setShoe(e.target.value || null)}
         >
           <option value="">--Please choose an option--</option>
           {shoeList.map((shoe) => (
@@ -140,7 +173,7 @@ export const PostForm = ({ toggleModal, handleSubmitPost }: IPostFormProps) => {
 
       {error && <span>{error}</span>}
       <Button type="submit" disabled={loading}>
-        {loading ? "Createing Post..." : "Create Post"}
+        Create Post
       </Button>
     </form>
   );
