@@ -36,11 +36,33 @@ export const PostForm = ({ toggleModal, handleSubmitPost }: IPostFormProps) => {
     loadShoes();
   }, []);
 
-  async function handleSubmit(event: FormEvent) {
-    event.preventDefault();
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
 
-    const formattedTime = `${time.hours}h ${time.minutes}m`;
-    const formattedPace = `${pace.minutes}:${pace.seconds} /km`;
+    if (pace.seconds && !pace.minutes) {
+      setError("Pace must include minutes if seconds are provided.");
+      return;
+    }
+
+    if (
+      (!time.hours || parseInt(time.hours) < 1) &&
+      (!time.minutes || parseInt(time.minutes) < 1)
+    ) {
+      setError("Time must include at least a few minutes or hours.");
+      return;
+    }
+
+    setError("");
+
+    const formattedTime = time.hours
+      ? `${time.hours}h${
+          time.minutes && time.minutes !== "0" ? ` ${time.minutes}min` : ""
+        }`
+      : `${time.minutes}min`;
+
+    const formattedPace = pace.minutes
+      ? `${pace.minutes}:${pace.seconds || "00"} /km`
+      : "";
 
     const postData: IPost = {
       title,
@@ -96,6 +118,7 @@ export const PostForm = ({ toggleModal, handleSubmitPost }: IPostFormProps) => {
           <input
             type="number"
             value={pace.minutes}
+            min={1}
             id="pace-minutes"
             onChange={(e) =>
               setPace((prev) => ({

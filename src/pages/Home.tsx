@@ -9,6 +9,7 @@ import { supabase } from "../database/supabase-client";
 import { PostModal } from "../components/PostModal/PostModal";
 import { createPost, getPosts } from "../services/postService";
 import { IPost } from "../models/IPost";
+import { PostCard } from "../components/PostCard/PostCard";
 
 interface IGoalData {
   goal: number;
@@ -139,7 +140,11 @@ export const Home = () => {
         </div>
       </div>
 
-      <div className="home-posts">{/* <Posts /> */}</div>
+      <div className="home-posts">
+        {posts.map((post) => (
+          <PostCard post={post} key={post.id} />
+        ))}
+      </div>
 
       {modals.goalModal && (
         <GoalModal
