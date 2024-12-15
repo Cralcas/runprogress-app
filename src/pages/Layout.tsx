@@ -3,7 +3,7 @@ import { Navbar } from "../components/Navbar/Navbar";
 
 export const Layout = () => {
   return (
-    <>
+    <div className="layout-wrapper">
       <header>
         <Navbar />
       </header>
@@ -11,6 +11,6 @@ export const Layout = () => {
         <Outlet />
       </main>
       <footer>Copyright</footer>
-    </>
+    </div>
   );
 };

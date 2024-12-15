@@ -1,8 +1,8 @@
-import { IPost } from "../../models/IPost";
+import { PostType } from "../../models/types";
 import styles from "./PostCard.module.scss";
 
 interface PostCardProps {
-  post: IPost;
+  post: PostType;
 }
 
 export const PostCard = ({ post }: PostCardProps) => {

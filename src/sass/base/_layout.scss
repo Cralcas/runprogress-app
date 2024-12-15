@@ -1,18 +1,23 @@
 @use "../globals/variables" as *;
 
 html,
-body {
+body,
+#root {
   height: 100%;
 }
 
-#root {
+.layout-wrapper {
   display: grid;
-  height: 100%;
+  min-height: 100%;
   grid-template-rows: auto 1fr auto;
   grid-template-columns: 1fr;
 }
 
 header {
+  position: sticky;
+  background-color: $background-color;
+  top: 0;
+  z-index: 99;
   grid-row: 1;
 }
 
@@ -22,9 +27,10 @@ main {
 
 footer {
   grid-row: 3;
+  padding: 1rem;
   background-color: #222;
   color: $secondary-color;
-  text-align: center;
+  text-align: end;
 }
 
 .container {
@@ -33,6 +39,7 @@ footer {
   padding-left: 0.938rem;
   padding-right: 0.938rem;
   max-width: 50rem;
+  height: 100%;
 }
 
 .form-section {

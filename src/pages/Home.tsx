@@ -8,8 +8,9 @@ import { useAuth } from "../hooks/useAuth";
 import { supabase } from "../database/supabase-client";
 import { PostModal } from "../components/PostModal/PostModal";
 import { createPost, getPosts } from "../services/postService";
-import { IPost } from "../models/IPost";
+import { PostType } from "../models/types";
 import { PostCard } from "../components/PostCard/PostCard";
+import { IPost } from "../models/IPost";
 
 interface IGoalData {
   goal: number;
@@ -24,7 +25,7 @@ interface IWeekInterval {
 export const Home = () => {
   const { user } = useAuth();
   const [goalData, setGoalData] = useState<IGoalData>({ goal: 0, progress: 0 });
-  const [posts, setPosts] = useState<IPost[]>([]);
+  const [posts, setPosts] = useState<PostType[]>([]);
 
   const currentWeek = getWeekInterval();
 
@@ -109,16 +110,18 @@ export const Home = () => {
       return;
     }
 
-    await createPost(post, user.id);
+    const newPost = await createPost(post, user.id);
 
-    const updatedGoal = await getGoal(weekInterval.start, weekInterval.end);
-
+    setPosts([newPost, ...posts]);
     setGoalData((prevGoalData) => ({
       ...prevGoalData,
-      progress: updatedGoal.goal_progress,
+      progress: prevGoalData.progress + post.distance,
     }));
   }
-
+  useEffect(() => {
+    console.log("Posts:", posts);
+    console.log("Goaldata:", goalData);
+  }, [posts, goalData]);
   return (
     <section className="home-section">
       <div className="home-goal">
@@ -141,9 +144,11 @@ export const Home = () => {
       </div>
 
       <div className="home-posts">
-        {posts.map((post) => (
-          <PostCard post={post} key={post.id} />
-        ))}
+        <div className="post-container">
+          {posts.map((post) => (
+            <PostCard post={post} key={post.id} />
+          ))}
+        </div>
       </div>
 
       {modals.goalModal && (

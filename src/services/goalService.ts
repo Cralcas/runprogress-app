@@ -1,17 +1,8 @@
 import { supabase } from "../database/supabase-client";
+import { GoalType } from "../models/types";
 import { getWeekInterval } from "../utilities/dateFormat";
 
-interface IGoalResponse {
-  goal_progress: number;
-  id: string;
-  user_id: string;
-  weekly_goal: number;
-}
-
-export async function getGoal(
-  start: string,
-  end: string
-): Promise<IGoalResponse> {
+export async function getGoal(start: string, end: string): Promise<GoalType> {
   const { data, error } = await supabase
     .from("goals")
     .select("*")
@@ -43,7 +34,7 @@ export async function createGoal(userId: string, newGoal: number) {
   }
 }
 
-export async function updateGoal(existingGoal: IGoalResponse, newGoal: number) {
+export async function updateGoal(existingGoal: GoalType, newGoal: number) {
   const { start, end } = getWeekInterval();
 
   const { error } = await supabase
