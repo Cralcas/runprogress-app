@@ -1,9 +1,8 @@
-export interface IPost {
-  id?: string;
+export interface PostCreate {
   title: string;
-  description: string;
+  description: string | null;
   distance: number;
-  pace: string;
+  pace: string | null;
   time: string;
   shoe: string | null;
 }

@@ -1,20 +1,54 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Button } from "../Button/Button";
 import { getShoes, IShoe } from "../../services/shoeService";
-import { IPost } from "../../models/IPost";
+import { PostCreate } from "../../models/IPost";
+import { PostType } from "../../models/types";
 
 interface IPostFormProps {
   toggleModal: () => void;
-  handleSubmitPost: (post: IPost) => void;
+  handleSubmitPost: (post: PostCreate) => void;
+  postToEdit: PostType | null;
 }
 
-export const PostForm = ({ toggleModal, handleSubmitPost }: IPostFormProps) => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [distance, setDistance] = useState("");
-  const [pace, setPace] = useState({ minutes: "", seconds: "" });
-  const [time, setTime] = useState({ hours: "", minutes: "" });
-  const [shoe, setShoe] = useState<string | null>("");
+export const PostForm = ({
+  toggleModal,
+  handleSubmitPost,
+  postToEdit,
+}: IPostFormProps) => {
+  let postData;
+
+  if (postToEdit) {
+    postData = {
+      title: postToEdit.title || "",
+      description: postToEdit.description || "",
+      distance: postToEdit.distance.toString() || "",
+      pace: postToEdit.pace ? postToEdit.pace.split(":") : ["", ""],
+      time: postToEdit.time || "",
+      shoe: postToEdit.shoe || null,
+    };
+  } else {
+    postData = {
+      title: "",
+      description: "",
+      distance: "",
+      pace: ["", ""],
+      time: "",
+      shoe: null,
+    };
+  }
+
+  const [title, setTitle] = useState(postData.title);
+  const [description, setDescription] = useState(postData.description);
+  const [distance, setDistance] = useState(postData.distance);
+  const [pace, setPace] = useState({
+    minutes: postData.pace[0],
+    seconds: postData.pace[1],
+  });
+  const [time, setTime] = useState({
+    hours: postData.time.split(":")[0] || "",
+    minutes: postData.time.split(":")[1] || "",
+  });
+  const [shoe, setShoe] = useState<string | null>(postData.shoe);
   const [shoeList, setShoeList] = useState<IShoe[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -26,7 +60,7 @@ export const PostForm = ({ toggleModal, handleSubmitPost }: IPostFormProps) => {
         const data = await getShoes();
         setShoeList(data);
       } catch (err) {
-        console.error("Error fetching goal:", err);
+        console.error("Error fetching shoes:", err);
         throw err;
       } finally {
         setLoading(false);
@@ -45,8 +79,8 @@ export const PostForm = ({ toggleModal, handleSubmitPost }: IPostFormProps) => {
     }
 
     if (
-      (!time.hours || parseInt(time.hours) < 1) &&
-      (!time.minutes || parseInt(time.minutes) < 1)
+      (time.hours && parseInt(time.hours) < 1) ||
+      (time.minutes && parseInt(time.minutes) < 1)
     ) {
       setError("Time must include at least a few minutes or hours.");
       return;
@@ -54,17 +88,13 @@ export const PostForm = ({ toggleModal, handleSubmitPost }: IPostFormProps) => {
 
     setError("");
 
-    const formattedTime = time.hours
-      ? `${time.hours}h${
-          time.minutes && time.minutes !== "0" ? ` ${time.minutes}min` : ""
-        }`
-      : `${time.minutes}min`;
-
     const formattedPace = pace.minutes
-      ? `${pace.minutes}:${pace.seconds || "00"} /km`
+      ? `${pace.minutes}:${pace.seconds || "00"}`
       : "";
 
-    const postData: IPost = {
+    const formattedTime = `${time.hours}:${time.minutes}`;
+
+    const postPayload: PostCreate = {
       title,
       description,
       distance: +distance,
@@ -73,7 +103,7 @@ export const PostForm = ({ toggleModal, handleSubmitPost }: IPostFormProps) => {
       shoe: shoe || null,
     };
 
-    handleSubmitPost(postData);
+    handleSubmitPost(postPayload);
     toggleModal();
   }
 
@@ -110,73 +140,69 @@ export const PostForm = ({ toggleModal, handleSubmitPost }: IPostFormProps) => {
         />
       </div>
 
-      <div>
-        <fieldset>
-          <legend>Pace</legend>
+      <fieldset>
+        <legend>Pace</legend>
+        <label htmlFor="pace-minutes">Minutes</label>
+        <input
+          type="number"
+          value={pace.minutes}
+          min={1}
+          id="pace-minutes"
+          onChange={(e) =>
+            setPace((prev) => ({
+              ...prev,
+              minutes: e.target.value,
+            }))
+          }
+          placeholder="min"
+        />
 
-          <label htmlFor="pace-minutes">Minutes</label>
-          <input
-            type="number"
-            value={pace.minutes}
-            min={1}
-            id="pace-minutes"
-            onChange={(e) =>
-              setPace((prev) => ({
-                ...prev,
-                minutes: e.target.value,
-              }))
-            }
-            placeholder="min"
-          />
+        <label htmlFor="pace-seconds">Seconds</label>
+        <input
+          type="number"
+          value={pace.seconds}
+          id="pace-seconds"
+          onChange={(e) =>
+            setPace((prev) => ({
+              ...prev,
+              seconds: e.target.value,
+            }))
+          }
+          placeholder="s"
+        />
+      </fieldset>
 
-          <label htmlFor="minutes">Seconds</label>
-          <input
-            type="number"
-            value={pace.seconds}
-            id="pace-seconds"
-            onChange={(e) =>
-              setPace((prev) => ({
-                ...prev,
-                seconds: e.target.value,
-              }))
-            }
-            placeholder="s"
-          />
-        </fieldset>
-      </div>
-      <div>
-        <fieldset>
-          <legend>Time</legend>
+      <fieldset>
+        <legend>Time</legend>
+        <label htmlFor="hours">Hours</label>
+        <input
+          type="number"
+          value={time.hours}
+          id="hours"
+          onChange={(e) =>
+            setTime((prev) => ({
+              ...prev,
+              hours: e.target.value,
+            }))
+          }
+          placeholder="h"
+        />
 
-          <label htmlFor="hours">Hours</label>
-          <input
-            type="number"
-            value={time.hours}
-            id="hours"
-            onChange={(e) =>
-              setTime((prev) => ({
-                ...prev,
-                hours: e.target.value,
-              }))
-            }
-            placeholder="h"
-          />
+        <label htmlFor="minutes">Minutes</label>
+        <input
+          type="number"
+          value={time.minutes}
+          id="minutes"
+          onChange={(e) =>
+            setTime((prev) => ({
+              ...prev,
+              minutes: e.target.value,
+            }))
+          }
+          placeholder="min"
+        />
+      </fieldset>
 
-          <label htmlFor="minutes">Minutes</label>
-          <input
-            type="number"
-            value={time.minutes}
-            id="minutes"
-            onChange={(e) =>
-              setTime((prev) => ({
-                ...prev,
-                minutes: e.target.value,
-              }))
-            }
-            placeholder="min"
-          />
-        </fieldset>
-      </div>
       <div>
         <label htmlFor="shoes">Select a shoe</label>
         <select
@@ -195,8 +221,9 @@ export const PostForm = ({ toggleModal, handleSubmitPost }: IPostFormProps) => {
       </div>
 
       {error && <span>{error}</span>}
+
       <Button type="submit" disabled={loading}>
-        Create Post
+        {postToEdit ? "Edit Post" : "Create Post"}
       </Button>
     </form>
   );

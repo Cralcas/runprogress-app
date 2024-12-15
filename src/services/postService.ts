@@ -1,5 +1,5 @@
 import { supabase } from "../database/supabase-client";
-import { IPost } from "../models/IPost";
+import { PostCreate } from "../models/IPost";
 import { PostType } from "../models/types";
 
 export async function getPosts(
@@ -21,7 +21,7 @@ export async function getPosts(
 }
 
 export async function createPost(
-  postData: IPost,
+  postData: PostCreate,
   userId: string
 ): Promise<PostType> {
   const { data, error } = await supabase
@@ -37,6 +37,40 @@ export async function createPost(
         shoe: postData.shoe,
       },
     ])
+    .select()
+    .single();
+
+  if (error || !data) {
+    console.error("Error saving goal:", error);
+    throw error;
+  }
+
+  return data;
+}
+
+export async function updatePost(
+  id: string,
+  post: PostCreate
+): Promise<PostType> {
+  const { data, error } = await supabase
+    .from("posts")
+    .update(post)
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error || !data) {
+    console.error("Error updating post:", error);
+    throw error;
+  }
+
+  return data;
+}
+export async function deletePost(id: string): Promise<PostType> {
+  const { data, error } = await supabase
+    .from("posts")
+    .delete()
+    .eq("id", id)
     .select()
     .single();
 

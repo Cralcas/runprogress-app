@@ -7,10 +7,15 @@ import { getGoal, createGoal, updateGoal } from "../services/goalService";
 import { useAuth } from "../hooks/useAuth";
 import { supabase } from "../database/supabase-client";
 import { PostModal } from "../components/PostModal/PostModal";
-import { createPost, getPosts } from "../services/postService";
+import {
+  createPost,
+  deletePost,
+  getPosts,
+  updatePost,
+} from "../services/postService";
 import { PostType } from "../models/types";
 import { PostCard } from "../components/PostCard/PostCard";
-import { IPost } from "../models/IPost";
+import { PostCreate } from "../models/IPost";
 
 interface IGoalData {
   goal: number;
@@ -26,6 +31,7 @@ export const Home = () => {
   const { user } = useAuth();
   const [goalData, setGoalData] = useState<IGoalData>({ goal: 0, progress: 0 });
   const [posts, setPosts] = useState<PostType[]>([]);
+  const [postToEdit, setPostToEdit] = useState<PostType | null>(null);
 
   const currentWeek = getWeekInterval();
 
@@ -104,24 +110,58 @@ export const Home = () => {
     toggleModal("goalModal");
   }
 
-  async function handleSubmitPost(post: IPost) {
+  async function handleSubmitPost(post: PostCreate) {
     if (!user) {
       console.error("User is undefined");
       return;
     }
 
-    const newPost = await createPost(post, user.id);
+    let updatedPost: PostType;
 
-    setPosts([newPost, ...posts]);
+    if (postToEdit) {
+      updatedPost = await updatePost(postToEdit.id, post);
+
+      setPosts((prevPosts) =>
+        prevPosts.map((p) => (p.id === updatedPost.id ? updatedPost : p))
+      );
+      setGoalData((prevGoalData) => ({
+        ...prevGoalData,
+        progress:
+          prevGoalData.progress - postToEdit.distance + updatedPost.distance,
+      }));
+    } else {
+      updatedPost = await createPost(post, user.id);
+
+      setPosts([updatedPost, ...posts]);
+      setGoalData((prevGoalData) => ({
+        ...prevGoalData,
+        progress: prevGoalData.progress + updatedPost.distance,
+      }));
+    }
+
+    setPostToEdit(null);
+  }
+
+  function handleEditPost(post: PostType) {
+    console.log("Editing Post ID:", post.id);
+    setPostToEdit(post);
+    toggleModal("postModal");
+  }
+
+  async function removePost(id: string) {
+    const removedPost = await deletePost(id);
+    setPosts((prev) => prev.filter((post) => post.id !== id));
     setGoalData((prevGoalData) => ({
       ...prevGoalData,
-      progress: prevGoalData.progress + post.distance,
+      progress: prevGoalData.progress - removedPost.distance,
     }));
   }
+
   useEffect(() => {
     console.log("Posts:", posts);
     console.log("Goaldata:", goalData);
   }, [posts, goalData]);
+
   return (
     <section className="home-section">
       <div className="home-goal">
@@ -137,7 +177,13 @@ export const Home = () => {
           <Button type="button" onClick={() => toggleModal("goalModal")}>
             Set Goal
           </Button>
-          <Button type="button" onClick={() => toggleModal("postModal")}>
+          <Button
+            type="button"
+            onClick={() => {
+              setPostToEdit(null);
+              toggleModal("postModal");
+            }}
+          >
             + Create Post
           </Button>
         </div>
@@ -146,7 +192,12 @@ export const Home = () => {
       <div className="home-posts">
         <div className="post-container">
           {posts.map((post) => (
-            <PostCard post={post} key={post.id} />
+            <PostCard
+              post={post}
+              key={post.id}
+              removePost={removePost}
+              editPost={handleEditPost}
+            />
           ))}
         </div>
       </div>
@@ -163,6 +214,7 @@ export const Home = () => {
         <PostModal
           onClose={() => toggleModal("postModal")}
           handleSubmitPost={handleSubmitPost}
+          postToEdit={postToEdit}
         ></PostModal>
       )}
     </section>
