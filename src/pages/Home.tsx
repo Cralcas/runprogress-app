@@ -191,17 +191,20 @@ export const Home = () => {
 
       <div className="home-posts">
         <div className="post-container">
-          {posts.map((post) => (
-            <PostCard
-              post={post}
-              key={post.id}
-              removePost={removePost}
-              editPost={handleEditPost}
-            />
-          ))}
+          {posts.length > 0 ? (
+            posts.map((post) => (
+              <PostCard
+                post={post}
+                key={post.id}
+                removePost={removePost}
+                editPost={handleEditPost}
+              />
+            ))
+          ) : (
+            <h2>You have no posts for this week</h2>
+          )}
         </div>
       </div>
-
       {modals.goalModal && (
         <GoalModal
           onClose={() => toggleModal("goalModal")}
