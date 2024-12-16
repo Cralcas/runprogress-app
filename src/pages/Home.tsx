@@ -165,8 +165,6 @@ export const Home = () => {
   return (
     <section className="home-section">
       <div className="home-goal">
-        <h3>Weekly goal</h3>
-
         {loading ? (
           <p>Loading...</p>
         ) : (
@@ -177,6 +175,7 @@ export const Home = () => {
           <Button type="button" onClick={() => toggleModal("goalModal")}>
             Set Goal
           </Button>
+
           <Button
             type="button"
             onClick={() => {
@@ -205,6 +204,7 @@ export const Home = () => {
           )}
         </div>
       </div>
+
       {modals.goalModal && (
         <GoalModal
           onClose={() => toggleModal("goalModal")}
