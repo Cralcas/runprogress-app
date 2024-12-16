@@ -15,27 +15,25 @@ export const PostForm = ({
   handleSubmitPost,
   postToEdit,
 }: IPostFormProps) => {
-  let postData;
+  const defaultPostData = {
+    title: "",
+    description: "",
+    distance: "",
+    pace: ["", ""],
+    time: "",
+    shoe: null,
+  };
 
-  if (postToEdit) {
-    postData = {
-      title: postToEdit.title || "",
-      description: postToEdit.description || "",
-      distance: postToEdit.distance.toString() || "",
-      pace: postToEdit.pace ? postToEdit.pace.split(":") : ["", ""],
-      time: postToEdit.time || "",
-      shoe: postToEdit.shoe || null,
-    };
-  } else {
-    postData = {
-      title: "",
-      description: "",
-      distance: "",
-      pace: ["", ""],
-      time: "",
-      shoe: null,
-    };
-  }
+  const postData = postToEdit
+    ? {
+        title: postToEdit.title || "",
+        description: postToEdit.description || "",
+        distance: postToEdit.distance.toString() || "",
+        pace: postToEdit.pace ? postToEdit.pace.split(":") : ["", ""],
+        time: postToEdit.time || "",
+        shoe: postToEdit.shoe || null,
+      }
+    : defaultPostData;
 
   const [title, setTitle] = useState(postData.title);
   const [description, setDescription] = useState(postData.description);
