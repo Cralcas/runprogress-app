@@ -156,11 +156,6 @@ export const Home = () => {
     }));
   }
 
-  useEffect(() => {
-    console.log("Posts:", posts);
-    console.log("Goaldata:", goalData.goal, goalData.progress);
-  }, [posts, goalData]);
-
   return (
     <section className="home-section">
       <div className="home-goal">

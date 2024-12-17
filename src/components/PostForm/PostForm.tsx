@@ -246,7 +246,7 @@ export const PostForm = ({
         </div>
       </fieldset>
 
-      {error && <span>{error}</span>}
+      {error && <span className={styles.error}>{error}</span>}
 
       <Button type="submit" disabled={loading}>
         {postToEdit ? "Edit Post" : "Create Post"}
