@@ -158,7 +158,7 @@ export const Home = () => {
 
   useEffect(() => {
     console.log("Posts:", posts);
-    console.log("Goaldata:", goalData);
+    console.log("Goaldata:", goalData.goal, goalData.progress);
   }, [posts, goalData]);
 
   return (
@@ -179,22 +179,26 @@ export const Home = () => {
             Set Goal
           </Button>
 
-          <Button
-            type="button"
-            size="default"
-            onClick={() => {
-              setPostToEdit(null);
-              toggleModal("postModal");
-            }}
-          >
-            + Create Post
-          </Button>
+          {goalData.goal !== 0 && (
+            <Button
+              type="button"
+              size="default"
+              onClick={() => {
+                setPostToEdit(null);
+                toggleModal("postModal");
+              }}
+            >
+              + Create Post
+            </Button>
+          )}
         </div>
       </div>
 
       <div className="home-posts">
         <div className="post-container">
-          {posts.length > 0 ? (
+          {goalData.goal === 0 ? (
+            <h3>Set a goal to track your progress.</h3>
+          ) : posts.length > 0 ? (
             posts.map((post) => (
               <PostCard
                 post={post}

@@ -4,6 +4,7 @@ import styles from "./Navbar.module.scss";
 import { Button } from "../Button/Button";
 import { IoIosLogOut } from "react-icons/io";
 import { MdAccountCircle } from "react-icons/md";
+import { AiOutlineHome } from "react-icons/ai"; // Import Home icon
 
 export const Navbar = () => {
   const { session, signOut } = useAuth();
@@ -58,13 +59,28 @@ export const Navbar = () => {
               <Button
                 variant="icon"
                 className={styles.iconButton}
-                onClick={() => navigate("/profile")}
-                aria-label="Profile"
+                onClick={() =>
+                  location.pathname === "/profile"
+                    ? navigate("/")
+                    : navigate("/profile")
+                }
+                aria-label={
+                  location.pathname === "/profile" ? "Home" : "Profile"
+                }
                 size="icon"
                 type="button"
               >
-                <MdAccountCircle className={styles.profile} />
-                <span className={styles.iconText}>Profile</span>
+                {location.pathname === "/profile" ? (
+                  <>
+                    <AiOutlineHome className={styles.profile} />
+                    <span className={styles.iconText}>Home</span>
+                  </>
+                ) : (
+                  <>
+                    <MdAccountCircle className={styles.profile} />
+                    <span className={styles.iconText}>Profile</span>
+                  </>
+                )}
               </Button>
             </li>
             <li>
