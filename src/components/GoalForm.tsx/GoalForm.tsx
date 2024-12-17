@@ -7,12 +7,12 @@ interface GoalFormProps {
   handleSubmitGoal: (newGoal: number) => void;
 }
 export const GoalForm = ({ handleSubmitGoal, currentGoal }: GoalFormProps) => {
-  const [goalInput, setLocalGoal] = useState(currentGoal);
+  const [localGoal, setLocalGoal] = useState(currentGoal);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
-    handleSubmitGoal(goalInput);
+    handleSubmitGoal(localGoal);
   };
 
   return (
@@ -27,7 +27,7 @@ export const GoalForm = ({ handleSubmitGoal, currentGoal }: GoalFormProps) => {
               id="goal"
               max={999}
               min={1}
-              value={goalInput || ""}
+              value={localGoal || ""}
               onChange={(e) => {
                 setLocalGoal(Number(e.target.value));
               }}

@@ -2,19 +2,25 @@
 @use "../../sass/globals/media-queries" as *;
 
 .cardBody {
+  display: flex;
+  flex-flow: column nowrap;
   border: 1px solid white;
+  background: $background-color;
+  padding: 0.5rem;
 }
 
 .cardHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 0.4rem;
 }
 
 .buttonContainer {
   display: flex;
   flex-wrap: nowrap;
   justify-content: end;
+  flex-grow: 1;
   gap: 0.2rem;
 }
 
@@ -24,10 +30,31 @@
   font-size: 1.5rem;
 }
 
+.title {
+  color: $primary-color;
+  font-size: $medium-text-mobile;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex-grow: 1;
+}
+
+.stats {
+  display: flex;
+  flex-grow: 1;
+  padding-bottom: 0.5rem;
+  gap: 2rem;
+}
+
 .edit {
   color: $primary-color;
+  align-self: flex-start;
 }
 
 .delete {
   color: $warning-color;
+  align-self: flex-start;
 }

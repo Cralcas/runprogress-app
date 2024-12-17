@@ -33,7 +33,7 @@
   appearance: none;
   border-radius: 10em;
 
-  @include for-desktop {
+  @include for-tablet-and-desktop {
     width: 60%;
   }
 
@@ -45,6 +45,6 @@
 
   &::-webkit-progress-value {
     background-color: $primary-color;
-    border-radius: 10em 0 0 10em;
+    border-radius: 10em;
   }
 }

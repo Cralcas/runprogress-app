@@ -30,8 +30,9 @@
 .home-posts {
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
-  gap: 1rem;
+  padding-top: 2rem;
   background-color: #222;
   height: 100%;
 
@@ -44,10 +45,13 @@
 .post-container {
   display: flex;
   flex-flow: column nowrap;
+  justify-content: center;
   gap: 1rem;
+  padding: 0 0.5rem;
+  width: 100%;
   height: 100%;
 
   @include for-desktop {
-    padding: 4rem 2rem;
+    // padding: 4rem 2rem;
   }
 }

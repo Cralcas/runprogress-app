@@ -21,7 +21,7 @@ export const PostCard = ({ post, removePost, editPost }: PostCardProps) => {
   return (
     <div className={styles.cardBody}>
       <div className={styles.cardHeader}>
-        <h4>{post.title}</h4>
+        <h4 className={styles.title}>{post.title}</h4>
         <div className={styles.buttonContainer}>
           <Button
             variant="icon"
@@ -45,12 +45,13 @@ export const PostCard = ({ post, removePost, editPost }: PostCardProps) => {
           </Button>
         </div>
       </div>
-
-      <p>{post.description}</p>
-      <div>
-        <div>{post.distance} km</div>
-        <div>{post.pace}</div>
-        <div>{post.time}</div>
+      <div className={styles.content}>
+        <p>{post.description}</p>
+        <div className={styles.stats}>
+          <div>{post.distance} km</div>
+          <div>{post.pace}</div>
+          <div>{post.time}</div>
+        </div>
       </div>
     </div>
   );

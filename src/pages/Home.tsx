@@ -5,6 +5,7 @@ import { getWeekInterval } from "../utilities/dateFormat";
 import { GoalModal } from "../components/GoalModal/GoalModal";
 import { getGoal, createGoal, updateGoal } from "../services/goalService";
 import { useAuth } from "../hooks/useAuth";
+import { supabase } from "../database/supabase-client";
 import { PostModal } from "../components/PostModal/PostModal";
 import {
   createPost,
@@ -55,7 +56,6 @@ export const Home = () => {
       const fetchedPosts = await getPosts(currentWeek.start, currentWeek.end);
 
       setGoalData({
-        id: fetchedGoalData.id,
         goal: fetchedGoalData.weekly_goal,
         progress: fetchedGoalData.goal_progress,
       });
@@ -78,15 +78,30 @@ export const Home = () => {
       return;
     }
 
-    if (goalData) {
-      await updateGoal(goalData, newGoal);
-    } else {
-      await createGoal(user.id, newGoal);
+    const { start, end } = getWeekInterval();
+
+    try {
+      const { data: existingGoal } = await supabase
+        .from("goals")
+        .select("*")
+        .gte("created_at", start)
+        .lte("created_at", end)
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      if (existingGoal) {
+        await updateGoal(existingGoal, newGoal);
+      } else {
+        await createGoal(user.id, newGoal);
+      }
+
+      setGoalData((prevData) => ({
+        ...prevData,
+        goal: newGoal,
+      }));
+    } catch (error) {
+      console.error("Error in handleSetGoal:", error);
     }
-    setGoalData((prevData) => ({
-      ...prevData,
-      goal: newGoal,
-    }));
 
     toggleModal("goalModal");
   }

@@ -77,6 +77,11 @@ export const PostForm = ({
       return;
     }
 
+    if (!time.hours && !time.minutes) {
+      setError("Please enter input for time.");
+      return;
+    }
+
     if (
       (time.hours && parseInt(time.hours) < 1) ||
       (time.minutes && parseInt(time.minutes) < 1)
@@ -93,7 +98,7 @@ export const PostForm = ({
 
     const formattedTime = `${time.hours}:${time.minutes}`;
 
-    const postPayload: PostCreate = {
+    const postValues: PostCreate = {
       title,
       description,
       distance: +distance,
@@ -102,7 +107,7 @@ export const PostForm = ({
       shoe: shoe || null,
     };
 
-    handleSubmitPost(postPayload);
+    handleSubmitPost(postValues);
     toggleModal();
   }
 
@@ -125,7 +130,7 @@ export const PostForm = ({
           className={styles.field}
           id="description"
           rows={5}
-          maxLength={200}
+          maxLength={100}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
@@ -151,7 +156,7 @@ export const PostForm = ({
           value={shoe || ""}
           onChange={(e) => setShoe(e.target.value || null)}
         >
-          <option value="">--Please choose an option--</option>
+          <option value="">No shoe selected</option>
           {shoeList.map((shoe) => (
             <option key={shoe.id} value={shoe.id}>
               {shoe.model}
@@ -217,7 +222,7 @@ export const PostForm = ({
                 hours: e.target.value,
               }))
             }
-            placeholder="h"
+            placeholder="hh"
           />
         </div>
 
