@@ -5,14 +5,12 @@ export function formatTime(time: string): string {
   const parsedMinutes = parseInt(minutes || "0", 10);
 
   if (parsedHours > 0 && parsedMinutes > 0) {
-    return `${parsedHours} hour${
-      parsedHours > 1 ? "s" : ""
-    } ${parsedMinutes} min`;
+    return `${parsedHours}h ${parsedMinutes}min`;
   } else if (parsedHours > 0) {
-    return `${parsedHours} hour${parsedHours > 1 ? "s" : ""}`;
+    return `${parsedHours} h`;
   } else if (parsedMinutes > 0) {
     return `${parsedMinutes} min`;
   } else {
-    return "0 min";
+    return "";
   }
 }
