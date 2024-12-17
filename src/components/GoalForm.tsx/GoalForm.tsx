@@ -7,12 +7,12 @@ interface GoalFormProps {
   handleSubmitGoal: (newGoal: number) => void;
 }
 export const GoalForm = ({ handleSubmitGoal, currentGoal }: GoalFormProps) => {
-  const [localGoal, setLocalGoal] = useState(currentGoal);
+  const [goalInput, setLocalGoal] = useState(currentGoal);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
-    handleSubmitGoal(localGoal);
+    handleSubmitGoal(goalInput);
   };
 
   return (
@@ -20,21 +20,20 @@ export const GoalForm = ({ handleSubmitGoal, currentGoal }: GoalFormProps) => {
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.goalDetails}>
           <div className={styles.input}>
-            <label htmlFor="goal">Distance</label>
+            <label htmlFor="goal">Distance (in Km)</label>
             <input
               className={styles.field}
               type="number"
               id="goal"
               max={999}
               min={1}
-              value={localGoal || ""}
+              value={goalInput || ""}
               onChange={(e) => {
                 setLocalGoal(Number(e.target.value));
               }}
               required
             />
           </div>
-          <p className={styles.unit}>Km</p>
         </div>
 
         <Button type="submit" className={styles.goalButton}>

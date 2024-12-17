@@ -1,0 +1,57 @@
+@use "../../sass/globals/variables" as *;
+@use "../../sass/globals/media-queries" as *;
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+
+  @include for-tablet-and-desktop {
+    padding: 2rem;
+    gap: 1.5rem;
+  }
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+}
+
+.fieldset {
+  display: flex;
+  text-align: center;
+  font-size: 1rem;
+  justify-content: center;
+  gap: 1rem;
+  border: none;
+}
+
+.field {
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 0.2rem;
+  border: 0.063rem solid #ccc;
+  background: $secondary-color;
+  border-radius: 0.25rem;
+  resize: none;
+}
+
+.shoes {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+
+  gap: 1rem;
+}
+
+.select {
+  padding: 0.2rem;
+  font-weight: bold;
+
+  border-radius: 0.25rem;
+}
+
+.time {
+  text-align: center;
+}

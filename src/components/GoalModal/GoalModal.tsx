@@ -23,6 +23,7 @@ export const GoalModal = ({
           variant="icon"
           className={styles.iconButton}
           onClick={onClose}
+          aria-label="Close modal"
         >
           <IoIosClose />
         </Button>

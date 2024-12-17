@@ -29,7 +29,12 @@ export const SignUpForm = () => {
 
       const emailIsTaken = createdUser.user?.identities?.length === 0;
       if (emailIsTaken) {
-        setError("Email is already taken. Please use a different email.");
+        setError("Email is already taken, please use a different email.");
+        return;
+      }
+
+      if (password.length < 6) {
+        setError("Password is too short");
         return;
       }
 
@@ -66,20 +71,20 @@ export const SignUpForm = () => {
         />
       </div>
       <div className={styles.input}>
-        <label htmlFor="password">Password</label>
+        <label htmlFor="password">Password (minimum 6 characters)</label>
         <input
           className={styles.field}
           type="password"
           id="password"
+          min={6}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          placeholder="min 6 characters"
         />
       </div>
 
-      {error && <div>{error}</div>}
-      {successMessage && <div>{successMessage}</div>}
+      {error && <p className={styles.error}>{error}</p>}
+      {successMessage && <p className={styles.success}>{successMessage}</p>}
 
       <div className={styles.formButton}>
         <Button

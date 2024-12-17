@@ -60,7 +60,7 @@ export const LoginForm = () => {
           required
         />
       </div>
-      {error && <p>{error}</p>}
+      {error && <p className={styles.error}>{error}</p>}
       <div className={styles.formButton}>
         <Button
           type="submit"

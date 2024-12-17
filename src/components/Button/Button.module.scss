@@ -23,15 +23,19 @@
     }
   }
 
+  &.default {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+
+    @include for-desktop {
+      font-size: 1rem;
+    }
+  }
+
   &.large {
     width: 100%;
     padding: 0.625rem 0;
     font-size: 1rem;
-  }
-
-  &.default {
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
   }
 
   &.icon {

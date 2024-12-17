@@ -3,6 +3,7 @@ import { Button } from "../Button/Button";
 import { getShoes, IShoe } from "../../services/shoeService";
 import { PostCreate } from "../../models/IPost";
 import { PostType } from "../../models/types";
+import styles from "./PostForm.module.scss";
 
 interface IPostFormProps {
   toggleModal: () => void;
@@ -106,10 +107,11 @@ export const PostForm = ({
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
+    <form onSubmit={handleSubmit} className={styles.form}>
+      <div className={styles.input}>
         <label htmlFor="title">Title</label>
         <input
+          className={styles.field}
           type="text"
           id="title"
           required
@@ -117,93 +119,33 @@ export const PostForm = ({
           onChange={(e) => setTitle(e.target.value)}
         />
       </div>
-      <div>
+      <div className={styles.input}>
         <label htmlFor="description">Description</label>
         <textarea
+          className={styles.field}
           id="description"
           rows={5}
+          maxLength={200}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
       </div>
-      <div>
-        <label htmlFor="distance">Distance</label>
+      <div className={styles.input}>
+        <label htmlFor="distance">Distance in kilometers</label>
         <input
+          className={styles.field}
           type="number"
           id="distance"
-          min={1}
           value={distance}
           onChange={(e) => setDistance(e.target.value)}
           required
         />
       </div>
 
-      <fieldset>
-        <legend>Pace</legend>
-        <label htmlFor="pace-minutes">Minutes</label>
-        <input
-          type="number"
-          value={pace.minutes}
-          min={1}
-          id="pace-minutes"
-          onChange={(e) =>
-            setPace((prev) => ({
-              ...prev,
-              minutes: e.target.value,
-            }))
-          }
-          placeholder="min"
-        />
-
-        <label htmlFor="pace-seconds">Seconds</label>
-        <input
-          type="number"
-          value={pace.seconds}
-          id="pace-seconds"
-          onChange={(e) =>
-            setPace((prev) => ({
-              ...prev,
-              seconds: e.target.value,
-            }))
-          }
-          placeholder="s"
-        />
-      </fieldset>
-
-      <fieldset>
-        <legend>Time</legend>
-        <label htmlFor="hours">Hours</label>
-        <input
-          type="number"
-          value={time.hours}
-          id="hours"
-          onChange={(e) =>
-            setTime((prev) => ({
-              ...prev,
-              hours: e.target.value,
-            }))
-          }
-          placeholder="h"
-        />
-
-        <label htmlFor="minutes">Minutes</label>
-        <input
-          type="number"
-          value={time.minutes}
-          id="minutes"
-          onChange={(e) =>
-            setTime((prev) => ({
-              ...prev,
-              minutes: e.target.value,
-            }))
-          }
-          placeholder="min"
-        />
-      </fieldset>
-
-      <div>
-        <label htmlFor="shoes">Select a shoe</label>
+      <div className={styles.shoes}>
+        <label htmlFor="shoes">Select shoe</label>
         <select
+          className={styles.select}
           name="shoes"
           id="shoes"
           value={shoe || ""}
@@ -217,6 +159,87 @@ export const PostForm = ({
           ))}
         </select>
       </div>
+
+      <fieldset className={styles.fieldset}>
+        <legend>Pace</legend>
+        <div className={styles.input}>
+          <label htmlFor="pace-minutes">Minutes</label>
+          <input
+            className={`${styles.field} ${styles.time}`}
+            type="number"
+            value={pace.minutes}
+            min={1}
+            max={99}
+            id="pace-minutes"
+            onChange={(e) =>
+              setPace((prev) => ({
+                ...prev,
+                minutes: e.target.value,
+              }))
+            }
+            placeholder="min"
+          />
+        </div>
+        <div className={styles.input}>
+          <label htmlFor="pace-seconds">Seconds</label>
+          <input
+            className={`${styles.field} ${styles.time}`}
+            type="number"
+            value={pace.seconds}
+            max={59}
+            min={0}
+            id="pace-seconds"
+            onChange={(e) =>
+              setPace((prev) => ({
+                ...prev,
+                seconds: e.target.value,
+              }))
+            }
+            placeholder="s"
+          />
+        </div>
+      </fieldset>
+
+      <fieldset className={styles.fieldset}>
+        <legend>Time</legend>
+        <div className={styles.input}>
+          <label htmlFor="hours">Hours</label>
+          <input
+            className={`${styles.field} ${styles.time}`}
+            type="number"
+            value={time.hours}
+            min={1}
+            max={99}
+            id="hours"
+            onChange={(e) =>
+              setTime((prev) => ({
+                ...prev,
+                hours: e.target.value,
+              }))
+            }
+            placeholder="h"
+          />
+        </div>
+
+        <div className={styles.input}>
+          <label htmlFor="minutes">Minutes</label>
+          <input
+            className={`${styles.field} ${styles.time}`}
+            type="number"
+            value={time.minutes}
+            id="minutes"
+            min={0}
+            max={59}
+            onChange={(e) =>
+              setTime((prev) => ({
+                ...prev,
+                minutes: e.target.value,
+              }))
+            }
+            placeholder="min"
+          />
+        </div>
+      </fieldset>
 
       {error && <span>{error}</span>}
 

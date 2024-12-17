@@ -5,7 +5,6 @@ import { getWeekInterval } from "../utilities/dateFormat";
 import { GoalModal } from "../components/GoalModal/GoalModal";
 import { getGoal, createGoal, updateGoal } from "../services/goalService";
 import { useAuth } from "../hooks/useAuth";
-import { supabase } from "../database/supabase-client";
 import { PostModal } from "../components/PostModal/PostModal";
 import {
   createPost,
@@ -16,11 +15,7 @@ import {
 import { PostType } from "../models/types";
 import { PostCard } from "../components/PostCard/PostCard";
 import { PostCreate } from "../models/IPost";
-
-interface IGoalData {
-  goal: number;
-  progress: number;
-}
+import { IGoalData } from "../models/IGoalData";
 
 interface IWeekInterval {
   start: string;
@@ -60,6 +55,7 @@ export const Home = () => {
       const fetchedPosts = await getPosts(currentWeek.start, currentWeek.end);
 
       setGoalData({
+        id: fetchedGoalData.id,
         goal: fetchedGoalData.weekly_goal,
         progress: fetchedGoalData.goal_progress,
       });
@@ -82,30 +78,15 @@ export const Home = () => {
       return;
     }
 
-    const { start, end } = getWeekInterval();
-
-    try {
-      const { data: existingGoal } = await supabase
-        .from("goals")
-        .select("*")
-        .gte("created_at", start)
-        .lte("created_at", end)
-        .eq("user_id", user.id)
-        .maybeSingle();
-
-      if (existingGoal) {
-        await updateGoal(existingGoal, newGoal);
-      } else {
-        await createGoal(user.id, newGoal);
-      }
-
-      setGoalData((prevData) => ({
-        ...prevData,
-        goal: newGoal,
-      }));
-    } catch (error) {
-      console.error("Error in handleSetGoal:", error);
+    if (goalData) {
+      await updateGoal(goalData, newGoal);
+    } else {
+      await createGoal(user.id, newGoal);
     }
+    setGoalData((prevData) => ({
+      ...prevData,
+      goal: newGoal,
+    }));
 
     toggleModal("goalModal");
   }
@@ -122,8 +103,11 @@ export const Home = () => {
       updatedPost = await updatePost(postToEdit.id, post);
 
       setPosts((prevPosts) =>
-        prevPosts.map((p) => (p.id === updatedPost.id ? updatedPost : p))
+        prevPosts.map((post) =>
+          post.id === updatedPost.id ? updatedPost : post
+        )
       );
+
       setGoalData((prevGoalData) => ({
         ...prevGoalData,
         progress:
@@ -172,12 +156,17 @@ export const Home = () => {
         )}
 
         <div className="goal-buttons">
-          <Button type="button" onClick={() => toggleModal("goalModal")}>
+          <Button
+            type="button"
+            size="default"
+            onClick={() => toggleModal("goalModal")}
+          >
             Set Goal
           </Button>
 
           <Button
             type="button"
+            size="default"
             onClick={() => {
               setPostToEdit(null);
               toggleModal("postModal");
@@ -200,7 +189,7 @@ export const Home = () => {
               />
             ))
           ) : (
-            <h2>You have no posts for this week</h2>
+            <h3>You have no posts for this week</h3>
           )}
         </div>
       </div>

@@ -8,11 +8,9 @@ interface IProgressProps {
 export const Progress = ({ goal, progress }: IProgressProps) => {
   return (
     <>
-      {!progress ? (
-        <h3 className={styles.header}>Set a goal for the week!</h3>
-      ) : (
+      {goal ? (
         <div className={styles.container}>
-          <h3 className={styles.header}>This week's goal</h3>
+          <h3 className={styles.header}>Goal for the week</h3>
           <div className={styles.progressContent}>
             <label htmlFor="progress" className={styles.unit}>
               {progress}/{goal}km
@@ -25,6 +23,8 @@ export const Progress = ({ goal, progress }: IProgressProps) => {
             ></progress>
           </div>
         </div>
+      ) : (
+        <h3 className={styles.header}>Set a distance goal for this week</h3>
       )}
     </>
   );
