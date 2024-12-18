@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import { Button } from "../components/Button/Button";
-import { Progress } from "../components/Progress/Progress";
 import { getWeekInterval } from "../utilities/dateFormat";
 import { GoalModal } from "../components/GoalModal/GoalModal";
 import { getGoal, createGoal, updateGoal } from "../services/goalService";
@@ -17,7 +15,7 @@ import { PostType } from "../models/types";
 import { PostCard } from "../components/PostCard/PostCard";
 import { PostCreate } from "../models/IPost";
 import { IGoalData } from "../models/IGoalData";
-import { Spinner } from "../components/Spinner/Spinner";
+import { GoalSection } from "../components/GoalSection/GoalSection";
 
 interface IWeekInterval {
   start: string;
@@ -29,9 +27,7 @@ export const Home = () => {
   const [goalData, setGoalData] = useState<IGoalData>({ goal: 0, progress: 0 });
   const [posts, setPosts] = useState<PostType[]>([]);
   const [postToEdit, setPostToEdit] = useState<PostType | null>(null);
-
   const currentWeek = getWeekInterval();
-
   const [weekInterval, setWeekInterval] = useState<IWeekInterval>({
     start: currentWeek.start,
     end: currentWeek.end,
@@ -49,6 +45,14 @@ export const Home = () => {
       [modalName]: !prev[modalName],
     }));
   }
+
+  const closeGoalModal = () => {
+    toggleModal("goalModal");
+  };
+
+  const closePostModal = () => {
+    toggleModal("postModal");
+  };
 
   async function loadGoalAndPosts(currentWeek: IWeekInterval) {
     setLoading(true);
@@ -74,10 +78,7 @@ export const Home = () => {
   }, [weekInterval]);
 
   async function handleSubmitGoal(newGoal: number) {
-    if (!user) {
-      console.error("User is undefined");
-      return;
-    }
+    if (!user) return;
 
     const { start, end } = getWeekInterval();
 
@@ -108,10 +109,7 @@ export const Home = () => {
   }
 
   async function handleSubmitPost(post: PostCreate) {
-    if (!user) {
-      console.error("User is undefined");
-      return;
-    }
+    if (!user) return;
 
     let updatedPost: PostType;
 
@@ -143,7 +141,6 @@ export const Home = () => {
   }
 
   function handleEditPost(post: PostType) {
-    console.log("Editing Post ID:", post.id);
     setPostToEdit(post);
     toggleModal("postModal");
   }
@@ -157,38 +154,19 @@ export const Home = () => {
     }));
   }
 
+  const resetPostEditing = () => {
+    setPostToEdit(null);
+    toggleModal("postModal");
+  };
+
   return (
     <section className="home-section">
-      <div className="home-goal">
-        {loading ? (
-          <Spinner />
-        ) : (
-          <Progress goal={goalData.goal} progress={goalData.progress} />
-        )}
-
-        <div className="goal-buttons">
-          <Button
-            type="button"
-            size="default"
-            onClick={() => toggleModal("goalModal")}
-          >
-            Set Goal
-          </Button>
-
-          {goalData.goal !== 0 && (
-            <Button
-              type="button"
-              size="default"
-              onClick={() => {
-                setPostToEdit(null);
-                toggleModal("postModal");
-              }}
-            >
-              + Create Post
-            </Button>
-          )}
-        </div>
-      </div>
+      <GoalSection
+        goalData={goalData}
+        loading={loading}
+        closeGoalModal={closeGoalModal}
+        resetPostEditing={resetPostEditing}
+      />
 
       <div className="home-posts">
         <div className="post-container">
@@ -211,7 +189,7 @@ export const Home = () => {
 
       {modals.goalModal && (
         <GoalModal
-          onClose={() => toggleModal("goalModal")}
+          onClose={closeGoalModal}
           handleSubmitGoal={handleSubmitGoal}
           currentGoal={goalData.goal}
         ></GoalModal>
@@ -219,7 +197,7 @@ export const Home = () => {
 
       {modals.postModal && (
         <PostModal
-          onClose={() => toggleModal("postModal")}
+          onClose={closePostModal}
           handleSubmitPost={handleSubmitPost}
           postToEdit={postToEdit}
         ></PostModal>

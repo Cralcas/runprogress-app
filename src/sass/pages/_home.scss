@@ -7,26 +7,6 @@
   height: 100%;
 }
 
-.home-goal {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem;
-  gap: 3rem;
-
-  .goal-buttons {
-    width: 100%;
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-
-    @include for-desktop {
-      gap: 10rem;
-    }
-  }
-}
-
 .home-posts {
   width: 100%;
   display: flex;
