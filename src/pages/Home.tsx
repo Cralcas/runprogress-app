@@ -17,6 +17,7 @@ import { PostType } from "../models/types";
 import { PostCard } from "../components/PostCard/PostCard";
 import { PostCreate } from "../models/IPost";
 import { IGoalData } from "../models/IGoalData";
+import { Spinner } from "../components/Spinner/Spinner";
 
 interface IWeekInterval {
   start: string;
@@ -160,7 +161,7 @@ export const Home = () => {
     <section className="home-section">
       <div className="home-goal">
         {loading ? (
-          <p>Loading...</p>
+          <Spinner />
         ) : (
           <Progress goal={goalData.goal} progress={goalData.progress} />
         )}
