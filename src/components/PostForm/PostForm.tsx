@@ -119,9 +119,10 @@ export const PostForm = ({
           className={styles.field}
           type="text"
           id="title"
-          required
+          maxLength={50}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          required
         />
       </div>
       <div className={styles.input}>

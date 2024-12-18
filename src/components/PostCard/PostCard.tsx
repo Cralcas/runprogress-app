@@ -23,29 +23,32 @@ export const PostCard = ({ post, removePost, editPost }: PostCardProps) => {
 
   return (
     <div className={styles.card}>
-      <div className={styles.buttons}>
-        <Button
-          variant="icon"
-          className={styles.iconButton}
-          aria-label="Logout"
-          size="icon"
-          type="button"
-          onClick={handleEdit}
-        >
-          <MdEdit className={styles.edit} />
-        </Button>
-        <Button
-          variant="icon"
-          className={styles.iconButton}
-          onClick={handleRemove}
-          aria-label="Logout"
-          size="icon"
-          type="button"
-        >
-          <MdDeleteOutline className={styles.delete} />
-        </Button>
+      <div className={styles.header}>
+        <h4 className={styles.title}>{post.title}</h4>
+        <div className={styles.buttons}>
+          <Button
+            variant="icon"
+            className={styles.iconButton}
+            aria-label="Logout"
+            size="icon"
+            type="button"
+            onClick={handleEdit}
+          >
+            <MdEdit className={styles.edit} />
+          </Button>
+          <Button
+            variant="icon"
+            className={styles.iconButton}
+            onClick={handleRemove}
+            aria-label="Logout"
+            size="icon"
+            type="button"
+          >
+            <MdDeleteOutline className={styles.delete} />
+          </Button>
+        </div>
       </div>
-      <h4 className={styles.title}>{post.title}</h4>
+
       <p>{post.description}</p>
       <div>
         <div className={styles.stats}>

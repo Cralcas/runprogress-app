@@ -45,6 +45,10 @@
   max-width: 500px;
   gap: 1rem;
   overflow-wrap: break-word;
+
+  @include for-desktop {
+    gap: 1.625rem;
+  }
 }
 
 h3 {
