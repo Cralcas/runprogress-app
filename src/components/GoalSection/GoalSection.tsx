@@ -17,16 +17,17 @@ export const GoalSection = ({
   closeGoalModal,
   resetPostEditing,
 }: GoalSectionProps) => {
+  if (loading) {
+    return (
+      <div className={styles.spinner}>
+        <Spinner />
+      </div>
+    );
+  }
+
   return (
     <div className={styles.goal}>
-      {loading ? (
-        <Spinner />
-      ) : (
-        <Progress
-          goal={goalData.weekly_goal}
-          progress={goalData.goal_progress}
-        />
-      )}
+      <Progress goal={goalData.weekly_goal} progress={goalData.goal_progress} />
 
       <div className={styles.buttons}>
         <Button type="button" size="default" onClick={closeGoalModal}>

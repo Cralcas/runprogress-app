@@ -9,7 +9,7 @@
   background: $background-color;
   word-break: break-word;
   gap: 1rem;
-  padding: 1.5rem 0.5rem;
+  padding: 1rem;
 
   @include for-tablet-and-desktop {
     border-radius: 0.5rem;
@@ -53,6 +53,12 @@
   }
 }
 
+.description {
+  @include for-large-desktop {
+    font-size: $medium-text-mobile;
+  }
+}
+
 .stats {
   display: flex;
   padding-bottom: 0.5rem;
@@ -60,6 +66,10 @@
 
   @include for-desktop {
     font-size: 1.625;
+  }
+
+  @include for-large-desktop {
+    font-size: $medium-text-mobile;
   }
 }
 

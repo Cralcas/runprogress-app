@@ -12,11 +12,10 @@ import {
   updatePost,
 } from "../services/postService";
 import { PostType } from "../models/types";
-import { PostCard } from "../components/PostCard/PostCard";
 import { PostCreate } from "../models/IPost";
 import { IGoalData } from "../models/IGoalData";
 import { GoalSection } from "../components/GoalSection/GoalSection";
-import { Spinner } from "../components/Spinner/Spinner";
+import { PostSection } from "../components/PostSection/PostSection";
 
 interface IWeekInterval {
   start: string;
@@ -42,7 +41,9 @@ export const Home = () => {
     goalModal: false,
     postModal: false,
   });
-  const [loading, setLoading] = useState(false);
+
+  const [loadingGoal, setLoadingGoal] = useState(false);
+  const [loadingPosts, setLoadingPosts] = useState(false);
 
   function toggleModal(modalName: keyof typeof modals) {
     setModals((prev) => ({
@@ -60,7 +61,8 @@ export const Home = () => {
   };
 
   async function loadGoalAndPosts(currentWeek: IWeekInterval) {
-    setLoading(true);
+    setLoadingGoal(true);
+    setLoadingPosts(true);
     try {
       const fetchedGoalData = await getGoal(currentWeek.start, currentWeek.end);
       const fetchedPosts = await getPosts(currentWeek.start, currentWeek.end);
@@ -75,7 +77,8 @@ export const Home = () => {
     } catch (error) {
       console.error("Error loading goal data:", error);
     } finally {
-      setLoading(false);
+      setLoadingGoal(false);
+      setLoadingPosts(false);
     }
   }
 
@@ -161,30 +164,19 @@ export const Home = () => {
     <section className="home-section">
       <GoalSection
         goalData={goalData}
-        loading={loading}
+        loading={loadingGoal}
         closeGoalModal={closeGoalModal}
         resetPostEditing={resetPostEditing}
       />
 
       <div className="home-posts">
-        {loading && <Spinner />}
-
-        <div className="post-container">
-          {goalData.weekly_goal === 0 ? (
-            <h3>Set a goal to track your progress.</h3>
-          ) : posts.length > 0 ? (
-            posts.map((post) => (
-              <PostCard
-                post={post}
-                key={post.id}
-                removePost={removePost}
-                editPost={handleEditPost}
-              />
-            ))
-          ) : (
-            <h3>You have no posts for this week</h3>
-          )}
-        </div>
+        <PostSection
+          goalData={goalData}
+          removePost={removePost}
+          editPost={handleEditPost}
+          loading={loadingPosts}
+          posts={posts}
+        />
       </div>
 
       {modals.goalModal && (
