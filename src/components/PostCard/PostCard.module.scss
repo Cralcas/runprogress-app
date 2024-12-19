@@ -9,7 +9,7 @@
   background: $background-color;
   word-break: break-word;
   gap: 1rem;
-  padding: 1rem;
+  padding: 0.5rem;
 
   @include for-tablet-and-desktop {
     border-radius: 0.5rem;
