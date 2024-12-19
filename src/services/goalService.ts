@@ -1,4 +1,5 @@
 import { supabase } from "../database/supabase-client";
+import { IGoalData } from "../models/IGoalData";
 import { GoalType } from "../models/types";
 import { getWeekInterval } from "../utilities/dateFormat";
 
@@ -34,7 +35,7 @@ export async function createGoal(userId: string, newGoal: number) {
   }
 }
 
-export async function updateGoal(existingGoal: GoalType, newGoal: number) {
+export async function updateGoal(existingGoal: IGoalData, newGoal: number) {
   const { start, end } = getWeekInterval();
 
   const { error } = await supabase

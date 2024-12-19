@@ -1,4 +1,5 @@
 export interface IGoalData {
-  goal: number;
-  progress: number;
+  id: string;
+  weekly_goal: number;
+  goal_progress: number;
 }

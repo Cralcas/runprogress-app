@@ -3,7 +3,7 @@ import { getWeekInterval } from "../utilities/dateFormat";
 import { GoalModal } from "../components/GoalModal/GoalModal";
 import { getGoal, createGoal, updateGoal } from "../services/goalService";
 import { useAuth } from "../hooks/useAuth";
-import { supabase } from "../database/supabase-client";
+
 import { PostModal } from "../components/PostModal/PostModal";
 import {
   createPost,
@@ -16,6 +16,7 @@ import { PostCard } from "../components/PostCard/PostCard";
 import { PostCreate } from "../models/IPost";
 import { IGoalData } from "../models/IGoalData";
 import { GoalSection } from "../components/GoalSection/GoalSection";
+import { Spinner } from "../components/Spinner/Spinner";
 
 interface IWeekInterval {
   start: string;
@@ -24,7 +25,11 @@ interface IWeekInterval {
 
 export const Home = () => {
   const { user } = useAuth();
-  const [goalData, setGoalData] = useState<IGoalData>({ goal: 0, progress: 0 });
+  const [goalData, setGoalData] = useState<IGoalData>({
+    id: "",
+    weekly_goal: 0,
+    goal_progress: 0,
+  });
   const [posts, setPosts] = useState<PostType[]>([]);
   const [postToEdit, setPostToEdit] = useState<PostType | null>(null);
   const currentWeek = getWeekInterval();
@@ -61,8 +66,9 @@ export const Home = () => {
       const fetchedPosts = await getPosts(currentWeek.start, currentWeek.end);
 
       setGoalData({
-        goal: fetchedGoalData.weekly_goal,
-        progress: fetchedGoalData.goal_progress,
+        id: fetchedGoalData.id,
+        weekly_goal: fetchedGoalData.weekly_goal,
+        goal_progress: fetchedGoalData.goal_progress,
       });
 
       setPosts(fetchedPosts);
@@ -80,29 +86,19 @@ export const Home = () => {
   async function handleSubmitGoal(newGoal: number) {
     if (!user) return;
 
-    const { start, end } = getWeekInterval();
-
     try {
-      const { data: existingGoal } = await supabase
-        .from("goals")
-        .select("*")
-        .gte("created_at", start)
-        .lte("created_at", end)
-        .eq("user_id", user.id)
-        .maybeSingle();
-
-      if (existingGoal) {
-        await updateGoal(existingGoal, newGoal);
+      if (goalData.weekly_goal > 0) {
+        await updateGoal(goalData, newGoal);
       } else {
         await createGoal(user.id, newGoal);
       }
 
       setGoalData((prevData) => ({
         ...prevData,
-        goal: newGoal,
+        weekly_goal: newGoal,
       }));
     } catch (error) {
-      console.error("Error in handleSetGoal:", error);
+      console.error("Error in handleSubmitGoal:", error);
     }
 
     toggleModal("goalModal");
@@ -124,8 +120,10 @@ export const Home = () => {
 
       setGoalData((prevGoalData) => ({
         ...prevGoalData,
-        progress:
-          prevGoalData.progress - postToEdit.distance + updatedPost.distance,
+        goal_progress:
+          prevGoalData.goal_progress -
+          postToEdit.distance +
+          updatedPost.distance,
       }));
     } else {
       updatedPost = await createPost(post, user.id);
@@ -133,7 +131,7 @@ export const Home = () => {
       setPosts([updatedPost, ...posts]);
       setGoalData((prevGoalData) => ({
         ...prevGoalData,
-        progress: prevGoalData.progress + updatedPost.distance,
+        goal_progress: prevGoalData.goal_progress + updatedPost.distance,
       }));
     }
 
@@ -150,7 +148,7 @@ export const Home = () => {
     setPosts((prev) => prev.filter((post) => post.id !== id));
     setGoalData((prevGoalData) => ({
       ...prevGoalData,
-      progress: prevGoalData.progress - removedPost.distance,
+      goal_progress: prevGoalData.goal_progress - removedPost.distance,
     }));
   }
 
@@ -169,8 +167,10 @@ export const Home = () => {
       />
 
       <div className="home-posts">
+        {loading && <Spinner />}
+
         <div className="post-container">
-          {goalData.goal === 0 ? (
+          {goalData.weekly_goal === 0 ? (
             <h3>Set a goal to track your progress.</h3>
           ) : posts.length > 0 ? (
             posts.map((post) => (
@@ -191,7 +191,7 @@ export const Home = () => {
         <GoalModal
           onClose={closeGoalModal}
           handleSubmitGoal={handleSubmitGoal}
-          currentGoal={goalData.goal}
+          currentGoal={goalData.weekly_goal}
         ></GoalModal>
       )}
 

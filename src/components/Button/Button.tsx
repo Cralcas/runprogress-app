@@ -9,6 +9,7 @@ interface IButtonProps {
   disabled?: boolean;
   variant?: "primary" | "secondary" | "icon";
   size?: "default" | "large" | "icon";
+  ariaLabel?: string;
 }
 
 export const Button = ({
@@ -19,6 +20,7 @@ export const Button = ({
   disabled = false,
   variant = "primary",
   size = "default",
+  ariaLabel,
 }: IButtonProps) => {
   const buttonClass = `${styles.button} ${styles[variant]} ${styles[size]} ${className}`;
 
@@ -28,6 +30,7 @@ export const Button = ({
       onClick={onClick}
       type={type}
       disabled={disabled}
+      aria-label={ariaLabel}
     >
       {children}
     </button>

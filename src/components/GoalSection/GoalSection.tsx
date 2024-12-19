@@ -22,7 +22,10 @@ export const GoalSection = ({
       {loading ? (
         <Spinner />
       ) : (
-        <Progress goal={goalData.goal} progress={goalData.progress} />
+        <Progress
+          goal={goalData.weekly_goal}
+          progress={goalData.goal_progress}
+        />
       )}
 
       <div className={styles.buttons}>
@@ -30,7 +33,7 @@ export const GoalSection = ({
           Set Goal
         </Button>
 
-        {goalData.goal !== 0 && (
+        {goalData.weekly_goal !== 0 && (
           <Button type="button" size="default" onClick={resetPostEditing}>
             + Create Post
           </Button>

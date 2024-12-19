@@ -142,6 +142,7 @@ export const PostForm = ({
           className={styles.field}
           type="number"
           id="distance"
+          min={1}
           value={distance}
           onChange={(e) => setDistance(e.target.value)}
           required

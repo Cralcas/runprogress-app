@@ -29,10 +29,10 @@ export const PostCard = ({ post, removePost, editPost }: PostCardProps) => {
           <Button
             variant="icon"
             className={styles.iconButton}
-            aria-label="Logout"
+            onClick={handleEdit}
+            ariaLabel="Edit post"
             size="icon"
             type="button"
-            onClick={handleEdit}
           >
             <MdEdit className={styles.edit} />
           </Button>
@@ -40,16 +40,16 @@ export const PostCard = ({ post, removePost, editPost }: PostCardProps) => {
             variant="icon"
             className={styles.iconButton}
             onClick={handleRemove}
-            aria-label="Logout"
             size="icon"
             type="button"
+            ariaLabel="Delete post"
           >
             <MdDeleteOutline className={styles.delete} />
           </Button>
         </div>
       </div>
 
-      <p>{post.description}</p>
+      <p className={styles.description}>{post.description}</p>
       <div>
         <div className={styles.stats}>
           <div className={styles.statsValue}>

@@ -33,7 +33,6 @@ export const Navbar = () => {
               size="default"
               variant="primary"
               onClick={() => navigate("/login")}
-              aria-label="Login"
             >
               Login
             </Button>
@@ -45,7 +44,6 @@ export const Navbar = () => {
             <Button
               size="default"
               variant="primary"
-              aria-label="Sign up"
               onClick={() => navigate("/signup")}
             >
               Sign Up
@@ -64,7 +62,7 @@ export const Navbar = () => {
                     ? navigate("/")
                     : navigate("/profile")
                 }
-                aria-label={
+                ariaLabel={
                   location.pathname === "/profile" ? "Home" : "Profile"
                 }
                 size="icon"
@@ -88,7 +86,7 @@ export const Navbar = () => {
                 variant="icon"
                 className={styles.iconButton}
                 onClick={handleLogout}
-                aria-label="Logout"
+                ariaLabel="Logout"
                 size="icon"
                 type="button"
               >
