@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./Button.module.scss";
 
-interface IButtonProps {
+interface ButtonProps {
   children: React.ReactNode;
   className?: string;
   onClick?: () => void;
@@ -21,7 +21,7 @@ export const Button = ({
   variant = "primary",
   size = "default",
   ariaLabel,
-}: IButtonProps) => {
+}: ButtonProps) => {
   const buttonClass = `${styles.button} ${styles[variant]} ${styles[size]} ${className}`;
 
   return (

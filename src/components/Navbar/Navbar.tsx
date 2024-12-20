@@ -4,7 +4,7 @@ import styles from "./Navbar.module.scss";
 import { Button } from "../Button/Button";
 import { IoIosLogOut } from "react-icons/io";
 import { MdAccountCircle } from "react-icons/md";
-import { AiOutlineHome } from "react-icons/ai"; // Import Home icon
+import { AiOutlineHome } from "react-icons/ai";
 
 export const Navbar = () => {
   const { session, signOut } = useAuth();

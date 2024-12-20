@@ -1,10 +1,5 @@
 import { supabase } from "../database/supabase-client";
-
-export interface IShoe {
-  id: string;
-  mileage: number;
-  model: string;
-}
+import { IShoe } from "../models/IShoe";
 
 export async function getShoes(): Promise<IShoe[]> {
   try {
@@ -13,10 +8,7 @@ export async function getShoes(): Promise<IShoe[]> {
       .select("*")
       .returns<IShoe[]>();
 
-    if (error) {
-      console.error("Error finding shoes", error.message);
-      return [];
-    }
+    if (error) return [];
 
     return data;
   } catch (err) {

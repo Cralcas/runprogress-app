@@ -26,7 +26,7 @@ export const GoalSection = ({
   }
 
   return (
-    <div className={styles.goal}>
+    <section className={styles.goal}>
       <Progress goal={goalData.weekly_goal} progress={goalData.goal_progress} />
 
       <div className={styles.buttons}>
@@ -40,6 +40,6 @@ export const GoalSection = ({
           </Button>
         )}
       </div>
-    </div>
+    </section>
   );
 };

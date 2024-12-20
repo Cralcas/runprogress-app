@@ -3,7 +3,6 @@ import { getWeekInterval } from "../utilities/dateFormat";
 import { GoalModal } from "../components/GoalModal/GoalModal";
 import { getGoal, createGoal, updateGoal } from "../services/goalService";
 import { useAuth } from "../hooks/useAuth";
-
 import { PostModal } from "../components/PostModal/PostModal";
 import {
   createPost,
@@ -75,7 +74,7 @@ export const Home = () => {
 
       setPosts(fetchedPosts);
     } catch (error) {
-      console.error("Error loading goal data:", error);
+      console.error("Error fetching data:", error);
     } finally {
       setLoadingGoal(false);
       setLoadingPosts(false);
@@ -155,11 +154,10 @@ export const Home = () => {
     }));
   }
 
-  const resetPostEditing = () => {
+  function resetPostEditing() {
     setPostToEdit(null);
     toggleModal("postModal");
-  };
-
+  }
   return (
     <section className="home-section">
       <GoalSection
@@ -169,7 +167,7 @@ export const Home = () => {
         resetPostEditing={resetPostEditing}
       />
 
-      <div className="home-posts">
+      <section className="home-posts">
         <PostSection
           goalData={goalData}
           removePost={removePost}
@@ -177,7 +175,7 @@ export const Home = () => {
           loading={loadingPosts}
           posts={posts}
         />
-      </div>
+      </section>
 
       {modals.goalModal && (
         <GoalModal

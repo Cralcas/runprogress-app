@@ -1,11 +1,12 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Button } from "../Button/Button";
-import { getShoes, IShoe } from "../../services/shoeService";
+import { getShoes } from "../../services/shoeService";
 import { PostCreate } from "../../models/IPost";
 import { PostType } from "../../models/types";
 import styles from "./PostForm.module.scss";
+import { IShoe } from "../../models/IShoe";
 
-interface IPostFormProps {
+interface PostFormProps {
   toggleModal: () => void;
   handleSubmitPost: (post: PostCreate) => void;
   postToEdit: PostType | null;
@@ -15,7 +16,7 @@ export const PostForm = ({
   toggleModal,
   handleSubmitPost,
   postToEdit,
-}: IPostFormProps) => {
+}: PostFormProps) => {
   const defaultPostData = {
     title: "",
     description: "",
@@ -69,7 +70,7 @@ export const PostForm = ({
     loadShoes();
   }, []);
 
-  async function handleSubmit(e: FormEvent) {
+  function handleSubmit(e: FormEvent) {
     e.preventDefault();
 
     if (pace.seconds && !pace.minutes) {
@@ -156,7 +157,7 @@ export const PostForm = ({
           name="shoes"
           id="shoes"
           value={shoe || ""}
-          onChange={(e) => setShoe(e.target.value || null)}
+          onChange={(e) => setShoe(e.target.value)}
         >
           <option value="">No shoe selected</option>
           {shoeList.map((shoe) => (

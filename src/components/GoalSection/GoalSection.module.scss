@@ -4,8 +4,15 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 1.5rem 1rem;
+  padding: 2rem 1rem;
   gap: 3rem;
+
+  @include for-desktop {
+    padding: 5rem 1rem;
+  }
+  @include for-large-desktop {
+    padding: 6rem 1rem;
+  }
 }
 
 .buttons {
