@@ -16,3 +16,26 @@ export async function getShoes(): Promise<IShoe[]> {
     throw err;
   }
 }
+
+export async function addShoe(
+  userId: string,
+  shoeModel: string
+): Promise<IShoe> {
+  const { data, error } = await supabase
+    .from("shoes")
+    .insert([
+      {
+        user_id: userId,
+        model: shoeModel,
+        mileage: 0,
+      },
+    ])
+    .select()
+    .single();
+
+  if (error || !data) {
+    console.error("Error saving goal:", error);
+    throw error;
+  }
+  return data;
+}

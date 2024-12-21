@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { getShoes } from "../services/shoeService";
+import { addShoe, getShoes } from "../services/shoeService";
 import { ShoeForm } from "../components/ShoeForm/ShoeForm";
 import { ShoeList } from "../components/ShoeList/ShoeList";
 import { IShoe } from "../models/IShoe";
+import { useAuth } from "../hooks/useAuth";
 
 export const Profile = () => {
+  const { user } = useAuth();
   const [shoes, setShoes] = useState<IShoe[]>([]);
   const [shoesLoading, setShoesLoading] = useState(false);
 
@@ -24,7 +26,13 @@ export const Profile = () => {
     loadShoesAndStats();
   }, []);
 
-  async function handleSubmitShoe(shoeModel: string) {}
+  async function handleSubmitShoe(shoeModel: string) {
+    if (!user) return;
+
+    const shoe = await addShoe(user.id, shoeModel);
+
+    setShoes([...shoes, shoe]);
+  }
 
   return (
     <section className="profile-section">

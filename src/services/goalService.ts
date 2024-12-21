@@ -19,15 +19,12 @@ export async function getGoal(start: string, end: string): Promise<GoalType> {
 }
 
 export async function createGoal(userId: string, newGoal: number) {
-  const { error } = await supabase
-    .from("goals")
-    .insert([
-      {
-        user_id: userId,
-        weekly_goal: newGoal,
-      },
-    ])
-    .single();
+  const { error } = await supabase.from("goals").insert([
+    {
+      user_id: userId,
+      weekly_goal: newGoal,
+    },
+  ]);
 
   if (error) {
     console.error("Error saving goal:", error);

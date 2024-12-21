@@ -1,10 +1,10 @@
 import { IShoe } from "../../models/IShoe";
 
-interface ShoeInfoProps {
+interface ShoeDetailsProps {
   shoe: IShoe;
 }
 
-export const ShoeInfo = ({ shoe }: ShoeInfoProps) => {
+export const ShoeDetails = ({ shoe }: ShoeDetailsProps) => {
   return (
     <div>
       {shoe.model} {shoe.mileage} km

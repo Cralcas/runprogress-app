@@ -1,5 +1,6 @@
 import { IShoe } from "../../models/IShoe";
-import { ShoeInfo } from "../Shoe/Shoe";
+import { ShoeDetails } from "../ShoeDetails/ShoeDetails";
+
 import { Spinner } from "../Spinner/Spinner";
 
 interface ShoesProps {
@@ -14,7 +15,7 @@ export const ShoeList = ({ shoes, loading }: ShoesProps) => {
   return (
     <section>
       {shoes.map((shoe) => (
-        <ShoeInfo shoe={shoe} key={shoe.model} />
+        <ShoeDetails shoe={shoe} key={shoe.id} />
       ))}
     </section>
   );

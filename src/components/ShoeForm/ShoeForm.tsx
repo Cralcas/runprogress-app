@@ -11,14 +11,20 @@ export const ShoeForm = ({ handleSubmitShoe }: ShoeFormProps) => {
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
 
-    handleSubmitShoe();
+    handleSubmitShoe(shoeModel);
   }
 
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <div>
         <label htmlFor="shoe">Add Shoe</label>
-        <input type="text" id="shoe" />
+        <input
+          type="text"
+          id="shoe"
+          value={shoeModel}
+          onChange={(e) => setShoeModel(e.target.value)}
+          required
+        />
       </div>
       <Button type="submit">Add</Button>
     </form>
