@@ -16,12 +16,12 @@ export const ShoeTable = ({ shoes, loading, removeShoe }: ShoesProps) => {
 
   return (
     <table className={styles.table}>
-      <thead className={styles.thead}>
+      <thead>
         <tr>
           <th>Shoes</th>
         </tr>
       </thead>
-      <tbody className={styles.tbody}>
+      <tbody>
         {shoes.map((shoe) => (
           <ShoeDetails shoe={shoe} key={shoe.id} removeShoe={removeShoe} />
         ))}
