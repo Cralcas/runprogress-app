@@ -1,10 +1,26 @@
+@use "../../sass/globals/variables" as *;
+@use "../../sass/globals/media-queries" as *;
+
 .profile-section {
   height: 100%;
   display: grid;
   grid-template-rows: auto 1fr;
+  gap: 1rem;
 }
 
-.shoe-section {
-  // display: flex;
-  // flex-direction: column;
+.profile-content {
+  display: grid;
+  grid-template-columns: 1fr;
+
+  @include for-tablet-and-desktop {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+}
+
+.profile-shoes {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  gap: 2rem;
 }

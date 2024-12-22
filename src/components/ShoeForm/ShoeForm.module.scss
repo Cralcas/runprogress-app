@@ -1,0 +1,25 @@
+@use "../../sass/globals/variables" as *;
+@use "../../sass/globals/media-queries" as *;
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.input {
+  display: flex;
+  flex-direction: row;
+  gap: 0.2rem;
+}
+
+.field {
+  width: 100%;
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 0.2rem;
+  border: 0.063rem solid #ccc;
+  background: $secondary-color;
+  border-radius: 0.25rem;
+  max-width: 18.75rem;
+}

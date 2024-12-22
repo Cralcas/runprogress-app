@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { addShoe, deleteShoe, getShoes } from "../services/shoeService";
 import { ShoeForm } from "../components/ShoeForm/ShoeForm";
-import { ShoeList } from "../components/ShoeList/ShoeList";
+
 import { IShoe } from "../models/IShoe";
 import { useAuth } from "../hooks/useAuth";
+import { ShoeTable } from "../components/ShoeList/ShoeTable";
 
 export const Profile = () => {
   const { user } = useAuth();
@@ -44,14 +45,15 @@ export const Profile = () => {
     <section className="profile-section">
       Graph Component
       <section className="profile-content">
-        <section className="shoe-section">
+        <div className="profile-shoes">
           <ShoeForm handleSubmitShoe={handleSubmitShoe} />
-          <ShoeList
+          <ShoeTable
             shoes={shoes}
             loading={shoesLoading}
             removeShoe={removeShoe}
           />
-        </section>
+        </div>
+        <div>delete account</div>
       </section>
     </section>
   );

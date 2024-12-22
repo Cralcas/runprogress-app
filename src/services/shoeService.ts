@@ -6,6 +6,9 @@ export async function getShoes(): Promise<IShoe[]> {
     const { data, error } = await supabase
       .from("shoes")
       .select("*")
+      .order("created_at", {
+        ascending: false,
+      })
       .returns<IShoe[]>();
 
     if (error) return [];

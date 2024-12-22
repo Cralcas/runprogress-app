@@ -1,3 +1,10 @@
-.item {
-  display: flex;
+@use "../../sass/globals/variables" as *;
+
+.button {
+  background: none;
+}
+
+.delete {
+  font-size: 2rem;
+  color: $warning-color;
 }

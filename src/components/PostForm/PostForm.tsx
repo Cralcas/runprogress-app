@@ -142,8 +142,9 @@ export const PostForm = ({
         <input
           className={styles.field}
           type="number"
+          min={0.1}
+          step={0.1}
           id="distance"
-          min={1}
           value={distance}
           onChange={(e) => setDistance(e.target.value)}
           required

@@ -14,12 +14,21 @@ export const ShoeDetails = ({ shoe, removeShoe }: ShoeDetailsProps) => {
   }
 
   return (
-    <li className={styles.item}>
-      <div>{shoe.model}</div>
-      <div>{shoe.mileage} km</div>
-      <Button variant="icon" type="button" size="icon" onClick={handleRemove}>
-        <IoIosClose />
-      </Button>
-    </li>
+    <tr>
+      <td>{shoe.model}</td>
+      <td>{shoe.mileage} km</td>
+      <td>
+        <Button
+          className={styles.button}
+          variant="icon"
+          type="button"
+          size="icon"
+          onClick={handleRemove}
+          ariaLabel="Delete shoe"
+        >
+          <IoIosClose className={styles.delete} />
+        </Button>
+      </td>
+    </tr>
   );
 };

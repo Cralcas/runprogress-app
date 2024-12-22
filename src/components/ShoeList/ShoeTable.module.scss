@@ -1,0 +1,29 @@
+@use "../../sass/globals/variables" as *;
+
+.table {
+  width: 100%;
+  max-width: 22.5rem;
+  border-collapse: collapse;
+
+  thead {
+    font-size: $medium-text-mobile;
+    color: $primary-color;
+  }
+
+  th,
+  td {
+    padding: 0.5rem;
+    text-align: left;
+    vertical-align: end;
+  }
+
+  td:first-child {
+    word-break: break-word;
+    white-space: normal;
+  }
+
+  td:nth-child(2) {
+    white-space: nowrap;
+    text-align: right;
+  }
+}
