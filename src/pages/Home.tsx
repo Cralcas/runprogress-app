@@ -15,6 +15,7 @@ import { PostCreate } from "../models/IPost";
 import { IGoalData } from "../models/IGoalData";
 import { GoalSection } from "../components/GoalSection/GoalSection";
 import { PostSection } from "../components/PostSection/PostSection";
+import { updateGoalProgress } from "../utilities/updateGoalProgress";
 
 interface IWeekInterval {
   start: string;
@@ -122,10 +123,10 @@ export const Home = () => {
 
       setGoalData((prevGoalData) => ({
         ...prevGoalData,
-        goal_progress:
-          prevGoalData.goal_progress -
-          postToEdit.distance +
-          updatedPost.distance,
+        goal_progress: updateGoalProgress(
+          prevGoalData.goal_progress,
+          -postToEdit.distance + updatedPost.distance
+        ),
       }));
     } else {
       updatedPost = await createPost(post, user.id);
@@ -133,7 +134,10 @@ export const Home = () => {
       setPosts([updatedPost, ...posts]);
       setGoalData((prevGoalData) => ({
         ...prevGoalData,
-        goal_progress: prevGoalData.goal_progress + updatedPost.distance,
+        goal_progress: updateGoalProgress(
+          prevGoalData.goal_progress,
+          updatedPost.distance
+        ),
       }));
     }
 
@@ -150,7 +154,10 @@ export const Home = () => {
     setPosts((prev) => prev.filter((post) => post.id !== id));
     setGoalData((prevGoalData) => ({
       ...prevGoalData,
-      goal_progress: prevGoalData.goal_progress - removedPost.distance,
+      goal_progress: updateGoalProgress(
+        prevGoalData.goal_progress,
+        -removedPost.distance
+      ),
     }));
   }
 

@@ -39,3 +39,12 @@ export async function addShoe(
   }
   return data;
 }
+
+export async function deleteShoe(id: string) {
+  const { error } = await supabase.from("shoes").delete().eq("id", id);
+
+  if (error) {
+    console.error("Error saving goal:", error);
+    throw error;
+  }
+}

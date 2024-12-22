@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { addShoe, getShoes } from "../services/shoeService";
+import { addShoe, deleteShoe, getShoes } from "../services/shoeService";
 import { ShoeForm } from "../components/ShoeForm/ShoeForm";
 import { ShoeList } from "../components/ShoeList/ShoeList";
 import { IShoe } from "../models/IShoe";
@@ -31,15 +31,27 @@ export const Profile = () => {
 
     const shoe = await addShoe(user.id, shoeModel);
 
-    setShoes([...shoes, shoe]);
+    setShoes([shoe, ...shoes]);
+  }
+
+  async function removeShoe(id: string) {
+    await deleteShoe(id);
+    setShoes((prev) => prev.filter((shoe) => shoe.id !== id));
+    console.log(id);
   }
 
   return (
     <section className="profile-section">
       Graph Component
-      <section className="profile content">
-        <ShoeForm handleSubmitShoe={handleSubmitShoe} />
-        <ShoeList shoes={shoes} loading={shoesLoading} />
+      <section className="profile-content">
+        <section className="shoe-section">
+          <ShoeForm handleSubmitShoe={handleSubmitShoe} />
+          <ShoeList
+            shoes={shoes}
+            loading={shoesLoading}
+            removeShoe={removeShoe}
+          />
+        </section>
       </section>
     </section>
   );
