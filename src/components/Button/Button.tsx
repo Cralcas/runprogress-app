@@ -7,7 +7,7 @@ interface ButtonProps {
   onClick?: () => void;
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
-  variant?: "primary" | "secondary" | "icon";
+  variant?: "primary" | "secondary" | "icon" | "danger";
   size?: "default" | "large" | "icon";
   ariaLabel?: string;
 }

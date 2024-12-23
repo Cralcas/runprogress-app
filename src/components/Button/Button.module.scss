@@ -55,4 +55,8 @@
       }
     }
   }
+
+  &.danger {
+    background: $warning-color;
+  }
 }

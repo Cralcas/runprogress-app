@@ -5,9 +5,11 @@ import { ShoeForm } from "../components/ShoeForm/ShoeForm";
 import { IShoe } from "../models/IShoe";
 import { useAuth } from "../hooks/useAuth";
 import { ShoeTable } from "../components/ShoeList/ShoeTable";
+import { deleteAccount } from "../services/accountService";
+import { DeleteAccount } from "../components/DeleteAccount/DeleteAccount";
 
 export const Profile = () => {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const [shoes, setShoes] = useState<IShoe[]>([]);
   const [shoesLoading, setShoesLoading] = useState(false);
 
@@ -41,6 +43,11 @@ export const Profile = () => {
     console.log(id);
   }
 
+  async function removeAccount() {
+    await deleteAccount();
+    signOut();
+  }
+
   return (
     <section className="profile-section">
       Graph Component
@@ -53,7 +60,9 @@ export const Profile = () => {
             removeShoe={removeShoe}
           />
         </div>
-        <div>delete account</div>
+        <div className="profile-account">
+          <DeleteAccount removeAccount={removeAccount} />
+        </div>
       </section>
     </section>
   );
