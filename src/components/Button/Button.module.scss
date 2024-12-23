@@ -58,5 +58,10 @@
 
   &.danger {
     background: $warning-color;
+    color: $background-color;
+
+    &:hover {
+      background-color: color.adjust($warning-color, $lightness: -5%);
+    }
   }
 }
