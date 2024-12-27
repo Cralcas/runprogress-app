@@ -1,32 +1,39 @@
 import { useEffect, useState } from "react";
 import { addShoe, deleteShoe, getShoes } from "../services/shoeService";
-import { ShoeForm } from "../components/ShoeForm/ShoeForm";
-
 import { IShoe } from "../models/IShoe";
 import { useAuth } from "../hooks/useAuth";
-import { ShoeTable } from "../components/ShoeList/ShoeTable";
 import { deleteAccount } from "../services/accountService";
 import { DeleteAccount } from "../components/DeleteAccount/DeleteAccount";
+import { Chart } from "../components/Chart/Chart";
+import { IChartData } from "../models/IChartData";
+import { getChartData } from "../services/chartService";
+import { ShoeSection } from "../components/ShoeSection/ShoeSection";
 
 export const Profile = () => {
   const { user, signOut } = useAuth();
   const [shoes, setShoes] = useState<IShoe[]>([]);
+  const [chartData, setChartData] = useState<IChartData[]>([]);
   const [shoesLoading, setShoesLoading] = useState(false);
+  const [chartDataLoading, setChartDataLoading] = useState(false);
 
-  async function loadShoesAndStats() {
+  async function loadShoesAndChartData() {
     setShoesLoading(true);
+    setChartDataLoading(true);
     try {
       const fetchedShoes = await getShoes();
+      const fetchedChartData = await getChartData(2024);
       setShoes(fetchedShoes);
+      setChartData(fetchedChartData);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
       setShoesLoading(false);
+      setChartDataLoading(false);
     }
   }
 
   useEffect(() => {
-    loadShoesAndStats();
+    loadShoesAndChartData();
   }, []);
 
   async function handleSubmitShoe(shoeModel: string) {
@@ -50,14 +57,16 @@ export const Profile = () => {
 
   return (
     <section className="profile-section">
-      Graph Component
+      <div className="profile-chart">
+        <Chart data={chartData} loading={chartDataLoading} />
+      </div>
       <section className="profile-content">
         <div className="profile-shoes">
-          <ShoeForm handleSubmitShoe={handleSubmitShoe} />
-          <ShoeTable
-            shoes={shoes}
+          <ShoeSection
+            handleSubmitShoe={handleSubmitShoe}
             loading={shoesLoading}
             removeShoe={removeShoe}
+            shoes={shoes}
           />
         </div>
         <div className="profile-account">

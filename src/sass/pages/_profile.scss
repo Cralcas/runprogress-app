@@ -8,14 +8,29 @@
   gap: 1rem;
 }
 
+.profile-chart {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.recharts-wrapper {
+  color: #222;
+  padding: 2rem 0.5rem;
+}
+
 .profile-content {
   display: grid;
   grid-template-columns: 1fr;
+  background: $background-secondary-color;
+  gap: 4rem;
 }
 
 .profile-shoes {
   display: flex;
   flex-direction: column;
+  align-items: center;
   padding: 1rem;
   gap: 2rem;
 
