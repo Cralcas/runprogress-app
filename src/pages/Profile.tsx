@@ -8,6 +8,7 @@ import { Chart } from "../components/Chart/Chart";
 import { IChartData } from "../models/IChartData";
 import { getChartData } from "../services/chartService";
 import { ShoeSection } from "../components/ShoeSection/ShoeSection";
+import { ChartPagination } from "../components/ChartPagination/ChartPagination";
 
 export const Profile = () => {
   const { user, signOut } = useAuth();
@@ -15,26 +16,39 @@ export const Profile = () => {
   const [chartData, setChartData] = useState<IChartData[]>([]);
   const [shoesLoading, setShoesLoading] = useState(false);
   const [chartDataLoading, setChartDataLoading] = useState(false);
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
 
-  async function loadShoesAndChartData() {
-    setShoesLoading(true);
+  async function loadChartData(year: number) {
     setChartDataLoading(true);
     try {
-      const fetchedShoes = await getShoes();
-      const fetchedChartData = await getChartData(2024);
-      setShoes(fetchedShoes);
+      const fetchedChartData = await getChartData(year);
       setChartData(fetchedChartData);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error fetching chart data:", error);
     } finally {
-      setShoesLoading(false);
       setChartDataLoading(false);
     }
   }
 
+  async function loadShoes() {
+    setShoesLoading(true);
+    try {
+      const fetchedShoes = await getShoes();
+      setShoes(fetchedShoes);
+    } catch (error) {
+      console.error("Error fetching shoes:", error);
+    } finally {
+      setShoesLoading(false);
+    }
+  }
+
   useEffect(() => {
-    loadShoesAndChartData();
+    loadShoes();
   }, []);
+
+  useEffect(() => {
+    loadChartData(currentYear);
+  }, [currentYear]);
 
   async function handleSubmitShoe(shoeModel: string) {
     if (!user) return;
@@ -55,10 +69,24 @@ export const Profile = () => {
     signOut();
   }
 
+  function handlePreviousYear() {
+    setCurrentYear((prevYear) => prevYear - 1);
+  }
+
+  function handleNextYear() {
+    setCurrentYear((prevYear) => prevYear + 1);
+  }
+
   return (
     <section className="profile-section">
       <div className="profile-chart">
         <Chart data={chartData} loading={chartDataLoading} />
+        <ChartPagination
+          currentYear={currentYear}
+          handleNextYear={handleNextYear}
+          handlePreviousYear={handlePreviousYear}
+          loading={chartDataLoading}
+        />
       </div>
       <section className="profile-content">
         <div className="profile-shoes">

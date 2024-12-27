@@ -13,7 +13,7 @@ export const Progress = ({ goal, progress }: IProgressProps) => {
           <h3 className={styles.header}>Goal for the week</h3>
           <div className={styles.progressContent}>
             <label htmlFor="progress" className={styles.unit}>
-              {progress}/{goal}km
+              {progress}/{goal}km {progress >= goal && "🏆"}
             </label>
             <progress
               id="progress"
