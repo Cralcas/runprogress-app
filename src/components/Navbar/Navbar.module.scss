@@ -13,10 +13,10 @@
   }
 
   .img {
-    width: 100px;
+    width: 6.25rem;
 
     @include for-desktop {
-      width: 150px;
+      width: 9.375rem;
     }
   }
 }
