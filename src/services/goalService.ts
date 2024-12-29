@@ -1,7 +1,7 @@
 import { supabase } from "../database/supabase-client";
 import { IGoalData } from "../models/IGoalData";
 import { GoalType } from "../models/types";
-import { getWeekInterval } from "../utilities/dateFormat";
+import { getWeekInterval } from "../utilities/getWeekInterval";
 
 export async function getGoal(start: string, end: string): Promise<GoalType> {
   const { data, error } = await supabase
@@ -27,7 +27,6 @@ export async function createGoal(userId: string, newGoal: number) {
   ]);
 
   if (error) {
-    console.error("Error saving goal:", error);
     throw error;
   }
 }
@@ -44,7 +43,6 @@ export async function updateGoal(existingGoal: IGoalData, newGoal: number) {
     .single();
 
   if (error) {
-    console.error("Error updating goal:", error);
     throw error;
   }
 }

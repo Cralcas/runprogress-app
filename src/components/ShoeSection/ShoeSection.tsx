@@ -1,6 +1,6 @@
 import { IShoe } from "../../models/IShoe";
 import { ShoeForm } from "../ShoeForm/ShoeForm";
-import { ShoeTable } from "../ShoeList/ShoeTable";
+import { ShoeTable } from "../ShoeTable/ShoeTable";
 import styles from "./ShoeSection.module.scss";
 
 interface ShoeSectionProps {

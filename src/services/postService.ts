@@ -41,7 +41,6 @@ export async function createPost(
     .single();
 
   if (error || !data) {
-    console.error("Error saving goal:", error);
     throw error;
   }
 
@@ -60,7 +59,6 @@ export async function updatePost(
     .single();
 
   if (error || !data) {
-    console.error("Error updating post:", error);
     throw error;
   }
 
@@ -75,7 +73,6 @@ export async function deletePost(id: string): Promise<PostType> {
     .single();
 
   if (error || !data) {
-    console.error("Error saving goal:", error);
     throw error;
   }
 

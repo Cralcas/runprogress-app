@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getWeekInterval } from "../utilities/dateFormat";
+import { getWeekInterval } from "../utilities/getWeekInterval";
 import { GoalModal } from "../components/GoalModal/GoalModal";
 import { getGoal, createGoal, updateGoal } from "../services/goalService";
 import { useAuth } from "../hooks/useAuth";

@@ -22,9 +22,15 @@ export const ShoeTable = ({ shoes, loading, removeShoe }: ShoesProps) => {
         </tr>
       </thead>
       <tbody>
-        {shoes.map((shoe) => (
-          <ShoeDetails shoe={shoe} key={shoe.id} removeShoe={removeShoe} />
-        ))}
+        {shoes.length < 1 ? (
+          <tr>
+            <td>No shoes added.</td>
+          </tr>
+        ) : (
+          shoes.map((shoe) => (
+            <ShoeDetails shoe={shoe} key={shoe.id} removeShoe={removeShoe} />
+          ))
+        )}
       </tbody>
     </table>
   );

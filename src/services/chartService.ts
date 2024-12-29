@@ -7,7 +7,6 @@ export async function getChartData(year: number): Promise<IChartData[]> {
   });
 
   if (error || !data) {
-    console.error("Error fetching chart data:", error);
     return [];
   }
 
