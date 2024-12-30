@@ -1,0 +1,13 @@
+@use "../globals/variables" as *;
+
+.notfound-section {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  a {
+    color: $primary-color;
+  }
+}

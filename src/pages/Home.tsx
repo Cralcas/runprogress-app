@@ -63,16 +63,25 @@ export const Home = () => {
   async function loadGoalAndPosts(currentWeek: IWeekInterval) {
     setLoadingGoal(true);
     setLoadingPosts(true);
+
     try {
       const fetchedGoalData = await getGoal(currentWeek.start, currentWeek.end);
+
+      if (fetchedGoalData) {
+        setGoalData({
+          id: fetchedGoalData.id,
+          weekly_goal: fetchedGoalData.weekly_goal,
+          goal_progress: fetchedGoalData.goal_progress,
+        });
+      } else {
+        setGoalData({
+          id: "",
+          weekly_goal: 0,
+          goal_progress: 0,
+        });
+      }
+
       const fetchedPosts = await getPosts(currentWeek.start, currentWeek.end);
-
-      setGoalData({
-        id: fetchedGoalData.id,
-        weekly_goal: fetchedGoalData.weekly_goal,
-        goal_progress: fetchedGoalData.goal_progress,
-      });
-
       setPosts(fetchedPosts);
     } catch (error) {
       console.error("Error fetching data:", error);

@@ -54,6 +54,11 @@ footer {
   width: 100%;
   gap: 0.625rem;
 
+  h1 {
+    text-align: center;
+    color: $primary-color;
+  }
+
   span {
     color: $secondary-color;
     text-align: center;

@@ -3,7 +3,10 @@ import { IGoalData } from "../models/IGoalData";
 import { GoalType } from "../models/types";
 import { getWeekInterval } from "../utilities/getWeekInterval";
 
-export async function getGoal(start: string, end: string): Promise<GoalType> {
+export async function getGoal(
+  start: string,
+  end: string
+): Promise<GoalType | null> {
   const { data, error } = await supabase
     .from("goals")
     .select("*")
@@ -11,8 +14,13 @@ export async function getGoal(start: string, end: string): Promise<GoalType> {
     .lte("created_at", end)
     .maybeSingle();
 
-  if (error || !data) {
-    throw error;
+  if (error) {
+    console.error("Error fetching goal:", error);
+    return null;
+  }
+
+  if (!data) {
+    return null;
   }
 
   return data;
