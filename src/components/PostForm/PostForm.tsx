@@ -226,7 +226,7 @@ export const PostForm = ({
                 hours: e.target.value,
               }))
             }
-            placeholder="hh"
+            placeholder="hr"
           />
         </div>
 

@@ -39,7 +39,7 @@ export const SignUpForm = () => {
       }
 
       setSuccessMessage("Account created, confirm via email.");
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);
