@@ -5,7 +5,7 @@ export const NotFound = () => {
     <section className="notfound-section">
       <div>
         <h1>
-          Page not found, return to <Link to={"/"}> start</Link>
+          Page not found, return to <Link to={"/"}> start.</Link>
         </h1>
       </div>
     </section>
