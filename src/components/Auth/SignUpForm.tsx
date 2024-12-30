@@ -23,7 +23,7 @@ export const SignUpForm = () => {
         password,
         options: {
           data: { username },
-          emailRedirectTo: "http://localhost:5173/login",
+          emailRedirectTo: import.meta.env.VITE_SUPABASE_EMAIL_REDIRECT,
         },
       });
 
