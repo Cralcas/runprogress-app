@@ -16,11 +16,11 @@
   justify-content: space-between;
   align-items: center;
 
-  min-width: 300px;
-  min-height: 300px;
+  min-width: 18.75rem;
+  min-height: 18.75rem;
 
   @include for-desktop {
-    min-height: 400px;
+    min-height: 25rem;
   }
 }
 
