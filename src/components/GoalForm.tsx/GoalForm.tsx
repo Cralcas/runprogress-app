@@ -20,7 +20,7 @@ export const GoalForm = ({ handleSubmitGoal, currentGoal }: GoalFormProps) => {
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.goalDetails}>
           <div className={styles.input}>
-            <label htmlFor="goal">Distance (in Km)</label>
+            <label htmlFor="goal">Distance (in km)</label>
             <input
               className={styles.field}
               type="number"

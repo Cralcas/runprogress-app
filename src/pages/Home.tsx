@@ -31,11 +31,7 @@ export const Home = () => {
   });
   const [posts, setPosts] = useState<PostType[]>([]);
   const [postToEdit, setPostToEdit] = useState<PostType | null>(null);
-  const currentWeek = getWeekInterval();
-  const [weekInterval, setWeekInterval] = useState<IWeekInterval>({
-    start: currentWeek.start,
-    end: currentWeek.end,
-  });
+  const currentWeek: IWeekInterval = getWeekInterval();
 
   const [modals, setModals] = useState({
     goalModal: false,
@@ -92,8 +88,8 @@ export const Home = () => {
   }
 
   useEffect(() => {
-    loadGoalAndPosts(weekInterval);
-  }, [weekInterval]);
+    loadGoalAndPosts(currentWeek);
+  }, []);
 
   async function handleSubmitGoal(newGoal: number) {
     if (!user) return;
