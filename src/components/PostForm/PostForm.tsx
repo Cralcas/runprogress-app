@@ -59,9 +59,8 @@ export const PostForm = ({
       try {
         const data = await getShoes();
         setShoeList(data);
-      } catch (err) {
-        console.error("Error fetching shoes:", err);
-        throw err;
+      } catch (error) {
+        console.error("Error fetching shoes:", error);
       } finally {
         setLoading(false);
       }
@@ -87,7 +86,7 @@ export const PostForm = ({
       (time.hours && parseInt(time.hours) < 1) ||
       (time.minutes && parseInt(time.minutes) < 1)
     ) {
-      setError("Time must include at least a few minutes or hours.");
+      setError("Time must include at least one minute or hour.");
       return;
     }
 
